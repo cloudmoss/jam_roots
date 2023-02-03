@@ -168,7 +168,7 @@ public class Tentacle : MonoBehaviour
 
         var dist = Vector3.Distance(mouseWorldPos, _handle.transform.position);
 
-        Debug.DrawLine(new Vector2(startPosition.x, startPosition.y), new Vector2(mouseWorldPos.x, mouseWorldPos.y), Color.red);
+        //Debug.DrawLine(new Vector2(startPosition.x, startPosition.y), new Vector2(mouseWorldPos.x, mouseWorldPos.y), Color.red);
 
         if (_currentlySelected == null && dist < _handleRadius)
         {
