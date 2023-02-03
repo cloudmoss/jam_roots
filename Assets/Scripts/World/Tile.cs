@@ -9,11 +9,13 @@ public struct Tile
 {
     public Vector2Int Position { get; private set; }
 
+    public HashSet<Entity> entities;
     public TileDef Def { get; private set; }
 
     public Tile(Vector2Int position, TileDef def)
     {
         Position = position;
         this.Def = def;
+        entities = new HashSet<Entity>();
     }
 }

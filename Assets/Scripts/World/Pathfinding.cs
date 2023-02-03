@@ -14,17 +14,17 @@ public static class Pathfinding
         _world = world;
     }
 
-    public static Task<List<Tile>> GetPathAsync(Vector2Int start, Vector2Int end)
+    public static Task<List<Tile>> GetPathAsync(Vector2Int start, Vector2Int end, int maxDist)
     {
         var task = new Task<List<Tile>>(() => {
-            return GetPath(start, end);
+            return GetPath(start, end, maxDist);
         });
         task.Start();
 
         return task;
     }
 
-    public static List<Tile> GetPath(Vector2Int start, Vector2Int end)
+    public static List<Tile> GetPath(Vector2Int start, Vector2Int end, int maxDist)
     {
         try
         {
@@ -63,7 +63,16 @@ public static class Pathfinding
                     foreach (var neighborTile in _world.GetNeighbours(curTile))
                     {
                         neighborIndex++;
-                        if (neighborTile.Def == null || !neighborTile.Def.IsWalkable) continue;
+
+                        if (neighborTile.Position == end)
+                        {
+                            path.Add(neighborTile);
+                            endReached = true;
+                            Debug.Log("End reached: " + neighborTile.Position);
+                            break;
+                        }
+
+                        if (neighborTile.Def == null || !neighborTile.Def.IsWalkable || neighborTile.entities.FirstOrDefault(e => e.Blocking) != null) continue;
 
                         var cost = costs[curTilePos] + (neighborIndex == 0 || neighborIndex == 2 || neighborIndex == 5 || neighborIndex == 7 ? 1.4f : 1f);
                         
@@ -80,16 +89,8 @@ public static class Pathfinding
                             costs.Add(neighborTile.Position, cost);
                         }
 
-                        if (neighborTile.Position == end)
-                        {
-                            path.Add(neighborTile);
-                            endReached = true;
-                            Debug.Log("End reached: " + neighborTile.Position);
-                            break;
-                        }
-
-                        // Thread.Sleep(1);
-                        // Debug.DrawLine(new Vector2(curTilePos.x, curTilePos.y), new Vector2(neighborTile.Position.x, neighborTile.Position.y), Color.cyan, 10);
+                        //Thread.Sleep(1);
+                        //Debug.DrawLine(new Vector2(curTilePos.x, curTilePos.y), new Vector2(neighborTile.Position.x, neighborTile.Position.y), Color.cyan, 5);
                     }
 
                     if (endReached) break;
@@ -126,7 +127,7 @@ public static class Pathfinding
                     }
                 }
 
-                Debug.DrawLine(new Vector2(curPos.x, curPos.y), new Vector2(minCostTile.Position.x, minCostTile.Position.y), Color.yellow, 10);
+                //Debug.DrawLine(new Vector2(curPos.x, curPos.y), new Vector2(minCostTile.Position.x, minCostTile.Position.y), Color.yellow, 10);
                 path.Add(minCostTile);
                 curPos = minCostTile.Position;
             }
