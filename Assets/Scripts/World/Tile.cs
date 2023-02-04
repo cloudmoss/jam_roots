@@ -18,4 +18,9 @@ public struct Tile
         this.Def = def;
         entities = new HashSet<Entity>();
     }
+
+    public override int GetHashCode()
+    {
+        return Position.GetHashCode();
+    }
 }

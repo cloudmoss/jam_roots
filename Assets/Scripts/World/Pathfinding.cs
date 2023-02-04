@@ -72,9 +72,9 @@ public static class Pathfinding
                             break;
                         }
 
-                        if (neighborTile.Def == null || !neighborTile.Def.IsWalkable || neighborTile.entities.FirstOrDefault(e => e.Blocking) != null) continue;
+                        if (neighborTile.Def == null || !neighborTile.Def.IsWalkable || closed.Contains(neighborTile.Position) || neighborTile.entities.FirstOrDefault(e => e.Blocking) != null) continue;
 
-                        var cost = costs[curTilePos] + (neighborIndex == 0 || neighborIndex == 2 || neighborIndex == 5 || neighborIndex == 7 ? 1.4f : 1f);
+                        var cost = costs[curTilePos] + (neighborIndex == 0 || neighborIndex == 2 || neighborIndex == 5 || neighborIndex == 7 ? 1.414f : 1f);
                         
                         if (costs.ContainsKey(neighborTile.Position))
                         {
@@ -85,7 +85,11 @@ public static class Pathfinding
                         }
                         else
                         {
-                            newOpen.Add(neighborTile.Position);
+                            if (cost < maxDist - 1)
+                            {
+                                newOpen.Add(neighborTile.Position);
+                            }
+
                             costs.Add(neighborTile.Position, cost);
                         }
 
@@ -107,33 +111,40 @@ public static class Pathfinding
             }
 
             // Reconstruct path
-            var curPos = end;
-            while (curPos != start)
+            if (endReached)
             {
-                var curTile = _world.GetTile(curPos);
-                var neighbours = _world.GetNeighbours(curTile);
-
-                var minCost = float.MaxValue;
-                var minCostTile = curTile;
-
-                foreach (var neighbour in neighbours)
+                var curPos = end;while (curPos != start)
                 {
-                    if (!costs.ContainsKey(neighbour.Position)) continue;
+                    var curTile = _world.GetTile(curPos);
+                    var neighbours = _world.GetNeighbours(curTile);
 
-                    if (costs[neighbour.Position] < minCost)
+                    var minCost = float.MaxValue;
+                    var minCostTile = curTile;
+
+                    foreach (var neighbour in neighbours)
                     {
-                        minCost = costs[neighbour.Position];
-                        minCostTile = neighbour;
+                        if (!costs.ContainsKey(neighbour.Position)) continue;
+
+                        if (costs[neighbour.Position] < minCost)
+                        {
+                            minCost = costs[neighbour.Position];
+                            minCostTile = neighbour;
+                        }
                     }
+
+                    //Debug.DrawLine(new Vector2(curPos.x, curPos.y), new Vector2(minCostTile.Position.x, minCostTile.Position.y), Color.yellow, 10);
+                    path.Add(minCostTile);
+                    curPos = minCostTile.Position;
                 }
 
-                //Debug.DrawLine(new Vector2(curPos.x, curPos.y), new Vector2(minCostTile.Position.x, minCostTile.Position.y), Color.yellow, 10);
-                path.Add(minCostTile);
-                curPos = minCostTile.Position;
+                path.Reverse();
+                return path;
+            }
+            else
+            {
+                return null;
             }
             
-            path.Reverse();
-            return path;
         }
         catch (System.Exception e)
         {
@@ -145,5 +156,59 @@ public static class Pathfinding
     static int CostEstimate(Vector2Int start, Vector2Int end)
     {
         return Mathf.Abs(start.x - end.x) + Mathf.Abs(start.y - end.y);
+    }
+
+    public static Tile[] GetTilesInRange(Vector2Int start, int range)
+    {
+        HashSet<Tile> closed = new HashSet<Tile>();
+        List<Tile> open = new List<Tile>();
+        List<Tile> newOpen = new List<Tile>();
+        Dictionary<Tile, float> costs = new Dictionary<Tile, float>();
+
+        open.Add(_world.GetTile(start));
+        costs.Add(open[0], 0);
+
+        while (open.Count > 0)
+        {
+            foreach(var curTile in open)
+            {
+                var neighbours = _world.GetNeighbours(curTile);
+
+                var neighborIndex = -1;
+                foreach (var neighborTile in neighbours)
+                {
+                    neighborIndex++;
+
+                    if (neighborTile.Def == null || !neighborTile.Def.IsWalkable || closed.Contains(neighborTile) || neighborTile.entities.FirstOrDefault(e => e.Blocking) != null) continue;
+
+                    var cost = costs[curTile] + (neighborIndex == 0 || neighborIndex == 2 || neighborIndex == 5 || neighborIndex == 7 ? 1.414f : 1f);
+
+                    if (costs.ContainsKey(neighborTile))
+                    {
+                        if (costs[neighborTile] > cost)
+                        {
+                            costs[neighborTile] = cost;
+                        }
+                    }
+                    else
+                    {
+                        if (cost < range)
+                        {
+                            newOpen.Add(neighborTile);
+                        }
+
+                        costs.Add(neighborTile, cost);
+                    }
+                }
+            }
+
+            open.ForEach(p => closed.Add(p));
+            open.Clear();
+            newOpen.ForEach(p => open.Add(p));
+            newOpen.Clear();
+
+        }
+
+        return closed.ToArray();
     }
 }

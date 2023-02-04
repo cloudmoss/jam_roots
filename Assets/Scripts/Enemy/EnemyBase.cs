@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyBase : MonoBehaviour
 {
     public int DifficultyRating {get { return _difficultyRating; }}
+    public bool canMove;
 
     [SerializeField] private GameObject[] _deathPrefabs;
     [SerializeField] private float _speed = 2f;
@@ -26,21 +27,29 @@ public class EnemyBase : MonoBehaviour
     {
         var playerPos = Player.Current.transform.position;
 
-        if (Vector3.Distance(playerPos, transform.position) < 2f)
+        if (_meleeAttackRate > 0f)
         {
-            if (_meleeCooldown <= 0)
+            if (Vector3.Distance(playerPos, transform.position) < 2f)
             {
-                _meleeCooldown = 1f / _meleeAttackRate;
-                Player.Current.Damage(_damage);
+                if (_meleeCooldown <= 0)
+                {
+                    _meleeCooldown = 1f / _meleeAttackRate;
+                    Player.Current.Damage(_damage);
+                }
+                else
+                {
+                    _meleeCooldown -= Time.deltaTime;
+                }
             }
             else
             {
-                _meleeCooldown -= Time.deltaTime;
+                canMove = true;
             }
         }
-        else
+
+        if (canMove)
         {
-            transform.position = Vector3.MoveTowards(transform.position, playerPos, Time.deltaTime * _speed);
+            transform.position = Vector3.MoveTowards(transform.position, playerPos, _speed * Time.deltaTime);
         }
 
         if (playerPos.x > transform.position.x)

@@ -18,7 +18,7 @@ public class EnemyController : MonoBehaviour
         Current = this;
     }
 
-    void SpawnWave()
+    IEnumerator SpawnWave()
     {
         float currency = Wave * 10;
         var possibleEnemies = Enemies.Where(e => e.DifficultyRating <= currency / 5f).ToList();
@@ -32,6 +32,8 @@ public class EnemyController : MonoBehaviour
 
             currency -= enemy.DifficultyRating;
             Instantiate(enemy, new Vector3(pos.x, pos.y, 0), Quaternion.identity);
+
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
@@ -51,7 +53,7 @@ public class EnemyController : MonoBehaviour
         }
 
         Wave++;
-        SpawnWave();
+        yield return StartCoroutine(SpawnWave());
         StartCoroutine(WaveCountdown());
     }
 }

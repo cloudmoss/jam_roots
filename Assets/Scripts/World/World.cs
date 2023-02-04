@@ -13,15 +13,43 @@ public class World : MonoBehaviour
     [SerializeField] private Vector2Int _size = new Vector2Int(300, 300);
 
     private Tile[,] _worldGrid;
+    private Texture2D _pathingTexture;
+    private GameObject _pathingOverlay;
+    private Color[] _pathingClearColors;
 
     private void Awake() 
     {
         Current = this;    
+        _pathingOverlay = transform.Find("_pathingOverlay").gameObject;
+        _pathingTexture = new Texture2D(_size.x, _size.y);
+        _pathingTexture.filterMode = FilterMode.Point;
+        _pathingOverlay.GetComponent<MeshRenderer>().material.mainTexture = _pathingTexture;
+        _pathingOverlay.transform.localScale = new Vector3(_size.x, _size.y, 1);
+        _pathingOverlay.transform.position = new Vector3(_size.x / 2f - 0.5f, _size.y / 2f - 0.5f, -100);
+
+        _pathingClearColors = new Color[_size.x * _size.y];
+        _pathingTexture.SetPixels(_pathingClearColors);
+        _pathingTexture.Apply();
     }
 
     void Start()
     {
         StartCoroutine(Generate());
+    }
+
+    public void ShowPathingTiles(Tile[] tiles)
+    {
+        _pathingTexture.SetPixels(_pathingClearColors);
+
+        if (tiles != null)
+        {
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                _pathingTexture.SetPixel(tiles[i].Position.x, tiles[i].Position.y, new Color(1, 1, 1, 0.2f));
+            }
+        }
+
+        _pathingTexture.Apply();
     }
 
     IEnumerator Generate()
@@ -64,7 +92,7 @@ public class World : MonoBehaviour
     public Tile[] GetNeighbours(Tile tile)
     {
         Tile[] neighbours = new Tile[8];
-        var i = 0;
+        var i = -1;
 
         for (int x = -1; x <= 1; x++)
         {
@@ -73,9 +101,9 @@ public class World : MonoBehaviour
                 if (x == 0 && y == 0)
                     continue;
 
+                i++;
                 Vector2Int neighbourPosition = new Vector2Int(tile.Position.x + x, tile.Position.y + y);
                 neighbours[i] = IsInBounds(neighbourPosition) ? GetTile(neighbourPosition) : new Tile(new Vector2Int(), null);
-                i++;
             }
         }
 

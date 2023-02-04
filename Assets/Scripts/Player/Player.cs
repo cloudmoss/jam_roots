@@ -4,36 +4,32 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public event System.Action OnDamageTaken;
-
     public static Player Current { get; private set; }
+    
+    public Tentacle[] tentacles { get; private set; }
+    public Entity Entity { get; private set; }
 
-    public float Health { get { return _health; } }
-    public float MaxHealth { get { return _maxHealth; } }
-
-    [SerializeField] private float _health = 100f;
-    [SerializeField] private float _maxHealth = 100f;
 
     private SpriteRenderer _spriteRenderer;
+    private Vector2 _position;
 
     private void Awake() {
+        Entity = new Entity("Player", true);
+        Entity.SetHealth(150f, 150f);
+        _position = transform.position;
         _spriteRenderer = GetComponent<SpriteRenderer>();
         Current = this;
-    }
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
+        tentacles = GetComponentsInChildren<Tentacle>();
     }
 
     public void Damage(float damage)
     {
-        _health -= damage;
-        OnDamageTaken?.Invoke();
+        Entity.DealDamage(damage);
+    }
+
+    public bool TestHit(Vector2 position)
+    {
+        return (Vector2.Distance(position, _position) < 1.5f);
     }
 }

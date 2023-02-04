@@ -8,6 +8,8 @@ public class Tentacle : MonoBehaviour
 {
     private static Tentacle _currentlySelected;
 
+    public Entity Entity { get { return _entity; } }
+    public Vector2 EndPosition { get { return _endPosition; } }
     public int length;
 
     [SerializeField] private Material _material;
@@ -31,6 +33,7 @@ public class Tentacle : MonoBehaviour
 
     private void Awake() 
     {
+        _entity.SetHealth(50f, 50f);
         _startPosition = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
         _endPosition = _startPosition;
         _targetPos = _endPosition;
@@ -61,6 +64,13 @@ public class Tentacle : MonoBehaviour
         }
 
         var path = _pathTask.Result;
+        
+        if (path == null)
+        {
+            _recalculating = false;
+            yield break;
+        }
+        
         Debug.Log(path.Count);
         var last = path[0].Position;
         _currentVertices = new Vector2[path.Count];
@@ -78,6 +88,16 @@ public class Tentacle : MonoBehaviour
         GenerateMesh();
         _recalculating = false;
         //_entity.SetOccupiedTiles(path.Skip(2).ToArray());
+    }
+
+    public bool TestHit(Vector2 position)
+    {
+        return (Vector2.Distance(position, _endPosition) < _handleRadius);
+    }
+
+    public void DealDamage(float damage)
+    {
+        _entity.DealDamage(damage);
     }
 
     private void OnDestroy() {
@@ -110,7 +130,7 @@ public class Tentacle : MonoBehaviour
         {
             var curVert = new Vector3(_currentVertices[i].x, _currentVertices[i].y, 0);
             var fwd = (_currentVertices[i] - _currentVertices[i - 1]).normalized;
-            var rightv2 = RotateVector(fwd, 90);
+            var rightv2 = fwd.RotateVector(90);
             var right = new Vector3(rightv2.x, rightv2.y, 0);
 
             uvs.Add(new Vector2(0, 0));
@@ -155,19 +175,6 @@ public class Tentacle : MonoBehaviour
         _filter.mesh = mesh;
     }
 
-    // Rotate a vector by an angle in degrees
-    public static Vector2 RotateVector(Vector2 v, float degrees)
-    {
-        float sin = Mathf.Sin(degrees * Mathf.Deg2Rad);
-        float cos = Mathf.Cos(degrees * Mathf.Deg2Rad);
-
-        float tx = v.x;
-        float ty = v.y;
-        v.x = (cos * tx) - (sin * ty);
-        v.y = (sin * tx) + (cos * ty);
-        return v;
-    }
-
     private void Update() 
     {
         var mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -185,6 +192,7 @@ public class Tentacle : MonoBehaviour
             {
                 _grabbed = true;
                 _currentlySelected = this;
+                World.Current.ShowPathingTiles(Pathfinding.GetTilesInRange(_startPosition, length));
             }
         }
         else
@@ -203,6 +211,7 @@ public class Tentacle : MonoBehaviour
                 _grabbed = false;
                 _handle.transform.position = new Vector3(_targetPos.x, _targetPos.y, 0);
                 _currentlySelected = null;
+                World.Current.ShowPathingTiles(null);
             }
         }
 
