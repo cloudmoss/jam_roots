@@ -16,4 +16,22 @@ public static class Utils
         v.y = (sin * tx) + (cos * ty);
         return v;
     }
+
+    // Convert vector3 to vector2int
+    public static Vector2Int ToVector2Int(this Vector3 v)
+    {
+        return new Vector2Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y));
+    }
+
+    // Convert vector2 to vector2int
+    public static Vector2Int ToVector2Int(this Vector2 v)
+    {
+        return new Vector2Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y));
+    }
+
+    // Convert vector2int to vector2
+    public static Vector2 ToVector2(this Vector2Int v)
+    {
+        return new Vector2(v.x, v.y);
+    }
 }

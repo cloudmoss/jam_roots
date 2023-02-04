@@ -62,7 +62,7 @@ public class CameraController : MonoBehaviour
             _velocity -= Vector2.right * acceleration * Time.unscaledDeltaTime;
         }
 
-        _velocity = Vector2.ClampMagnitude(_velocity, maxSpeed) * (_zoom / zoomBounds.x);
+        _velocity = Vector2.ClampMagnitude(_velocity, maxSpeed * (_zoom / zoomBounds.x));
 
         transform.position += (Vector3)_velocity * Time.unscaledDeltaTime;
 

@@ -17,19 +17,20 @@ public class Tentacle : MonoBehaviour
     [SerializeField] private float _thickness;
     [SerializeField] private GameObject _handle;
     [SerializeField] private float _handleRadius = 0.5f;
+    [SerializeField] private float _attackRange = 0.5f;
+    [SerializeField] private float _movementSpeed = 1f;
 
     private CircleCollider2D _collider;
     private Entity _entity = new Entity("Tentacle", true);
-    private Task<List<Tile>> _pathTask = null;
     private MeshFilter _filter;
     private MeshRenderer _renderer;
     private Vector2[] _currentVertices;
     private bool _grabbed = false;
     private Vector2Int _targetPos;
-    private bool _recalculating = false;
     private Vector2Int _startPosition;
     private Vector2Int _endPosition;
-    private Rigidbody2D _rb;
+    private Coroutine _movementCoroutine;
+    private Vector2Int _currentlyMovingTo;
 
     private void Awake() 
     {
@@ -42,32 +43,32 @@ public class Tentacle : MonoBehaviour
         _renderer.material = _material;
         _collider = _handle.AddComponent<CircleCollider2D>();
         _collider.radius = _handleRadius;
-        _rb = gameObject.AddComponent<Rigidbody2D>();
-        _rb.gravityScale = 0f;
+        _currentlyMovingTo = _startPosition;
     }
 
     public void Move(Vector2Int position)
     {
         Debug.Log("Move to " + position);
-
+        if (_movementCoroutine != null)
+            StopCoroutine(_movementCoroutine);
         //_entity.ClearBlockers();
-        _pathTask = Pathfinding.GetPathAsync(_startPosition, position, length);
-        StartCoroutine(WaitForPath());
-        _recalculating = true;
+        _movementCoroutine = StartCoroutine(MovementSequence(_endPosition, position));
     }
 
-    IEnumerator WaitForPath()
+    IEnumerator FitTentacleToPath(Vector2Int targetPosition)
     {
-        while (!_pathTask.IsCompleted)
+        var pathTask = Pathfinding.GetPathAsync(_startPosition, targetPosition, length);
+
+        while (!pathTask.IsCompleted)
         {
             yield return null;
         }
 
-        var path = _pathTask.Result;
-        
+        var path = pathTask.Result;
+        pathTask.Dispose();
+
         if (path == null)
         {
-            _recalculating = false;
             yield break;
         }
         
@@ -82,12 +83,57 @@ public class Tentacle : MonoBehaviour
             _currentVertices[i] = new Vector2(path[i].Position.x, path[i].Position.y);
         }
 
-        _pathTask.Dispose();
+        pathTask.Dispose();
         _endPosition = path[path.Count - 1].Position;
 
         GenerateMesh();
-        _recalculating = false;
         //_entity.SetOccupiedTiles(path.Skip(2).ToArray());
+    }
+
+    IEnumerator MovementSequence(Vector2Int fromPosition, Vector2Int toPosition)
+    {
+        _currentlyMovingTo = toPosition;
+        var curPos = fromPosition;
+
+        var pathTask = Pathfinding.GetPathAsync(fromPosition, toPosition, 10000);
+
+        while (!pathTask.IsCompleted)
+        {
+            yield return null;
+        }
+
+        var path = pathTask.Result;
+        pathTask.Dispose();
+
+        if (path == null)
+        {
+            _movementCoroutine = null;
+            yield break;
+        }
+
+        var last = path[0].Position;
+
+        for (int i = 0; i < path.Count; i++)
+        {
+            Debug.DrawLine(new Vector2(last.x, last.y), new Vector2(path[i].Position.x, path[i].Position.y), Color.yellow, 4);
+            last = path[i].Position;
+        }
+
+
+        while(path.Count > 0)
+        {
+            var nextPos = path[0].Position;
+            path.RemoveAt(0);
+
+            yield return StartCoroutine(FitTentacleToPath(nextPos));
+
+            yield return new WaitForSeconds(1f / _movementSpeed);
+        }
+
+        if (!_grabbed)
+            _handle.transform.position = new Vector3(_endPosition.x, _endPosition.y, 0);
+
+        _movementCoroutine = null;
     }
 
     public bool TestHit(Vector2 position)
@@ -98,13 +144,6 @@ public class Tentacle : MonoBehaviour
     public void DealDamage(float damage)
     {
         _entity.DealDamage(damage);
-    }
-
-    private void OnDestroy() {
-        if (_pathTask != null)
-        {
-            _pathTask.Dispose();
-        }
     }
 
     public void GenerateMesh()
@@ -212,19 +251,27 @@ public class Tentacle : MonoBehaviour
                 _handle.transform.position = new Vector3(_targetPos.x, _targetPos.y, 0);
                 _currentlySelected = null;
                 World.Current.ShowPathingTiles(null);
+
+                if (!World.Current.GetTile(_targetPos).Def.IsWalkable)
+                {
+                    _handle.transform.position = new Vector3(_endPosition.x, _endPosition.y, 0);
+                }
+            }
+
+            if (_targetPos != _currentlyMovingTo)
+            {
+                Move(_targetPos);
             }
         }
 
-        if (_targetPos != _endPosition && !_recalculating)
+        var enemiesInRange = EnemyController.GetEnemiesInRange(_endPosition, _attackRange);
+
+        foreach(var enemy in enemiesInRange)
         {
-            Move(_targetPos);
-        }
-    }
-    
-    private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.TryGetComponent<EnemyBase>(out var enemy)) {
-            enemy.Kill();
-            Debug.Log("Killed enemy");
+            if (enemy != null)
+            {
+                enemy.Kill();
+            }
         }
     }
 }

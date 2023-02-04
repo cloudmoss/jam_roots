@@ -36,7 +36,13 @@ public static class Pathfinding
 
             if (!_world.IsInBounds(start) || !_world.IsInBounds(end))
             {
-                Debug.LogError("Start or end point out of bounds");
+                Debug.Log("Start or end point out of bounds");
+                return null;
+            }
+
+            if (!World.Current.GetTile(end).Def.IsWalkable)
+            {
+                Debug.Log("End point is not walkable");
                 return null;
             }
 
@@ -68,7 +74,7 @@ public static class Pathfinding
                         {
                             path.Add(neighborTile);
                             endReached = true;
-                            Debug.Log("End reached: " + neighborTile.Position);
+                            //Debug.Log("End reached: " + neighborTile.Position);
                             break;
                         }
 
