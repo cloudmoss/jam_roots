@@ -66,6 +66,8 @@ public static class Pathfinding
 
                     var neighborIndex = -1;
 
+                    if (costs[curTile.Position] >= maxDist) continue;
+
                     foreach (var neighborTile in _world.GetNeighbours(curTile))
                     {
                         neighborIndex++;
@@ -91,11 +93,7 @@ public static class Pathfinding
                         }
                         else
                         {
-                            if (cost < maxDist - 1)
-                            {
-                                newOpen.Add(neighborTile.Position);
-                            }
-
+                            newOpen.Add(neighborTile.Position);
                             costs.Add(neighborTile.Position, cost);
                         }
 
@@ -171,6 +169,8 @@ public static class Pathfinding
         List<Tile> newOpen = new List<Tile>();
         Dictionary<Tile, float> costs = new Dictionary<Tile, float>();
 
+        var r = new List<Tile>();
+
         open.Add(_world.GetTile(start));
         costs.Add(open[0], 0);
 
@@ -179,6 +179,8 @@ public static class Pathfinding
             foreach(var curTile in open)
             {
                 var neighbours = _world.GetNeighbours(curTile);
+
+                if (costs[curTile] >= range) continue;
 
                 var neighborIndex = -1;
                 foreach (var neighborTile in neighbours)
@@ -198,11 +200,7 @@ public static class Pathfinding
                     }
                     else
                     {
-                        if (Mathf.FloorToInt(cost) < range)
-                        {
-                            newOpen.Add(neighborTile);
-                        }
-
+                        newOpen.Add(neighborTile);
                         costs.Add(neighborTile, cost);
                     }
                 }

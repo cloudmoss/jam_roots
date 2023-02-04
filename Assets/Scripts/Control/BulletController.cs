@@ -57,14 +57,14 @@ public class BulletController : MonoBehaviour
                                 if (tentacle.TestHit(bullet.position))
                                 {
                                     playerhit = true;
-                                    entity = tentacle.Entity;
+                                    entity = tentacle;
                                     break;
                                 }
                             }
                         }
                         else
                         {
-                            entity = Player.Current.Entity;
+                            entity = Player.Current;
                         }
 
                         if (playerhit)

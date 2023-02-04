@@ -10,13 +10,13 @@ public class UIController : MonoBehaviour
 
     void Start()
     {
-        Player.Current.Entity.OnDamageTaken += UpdateHealthText;
+        Player.Current.OnDamageTaken += UpdateHealthText;
         StartCoroutine(UpdateWaveText());
     }
 
     void UpdateHealthText()
     {
-        _healthText.text = "Health: " + Player.Current.Entity.Health.ToString("F0") + "/" + Player.Current.Entity.MaxHealth.ToString("F0");
+        _healthText.text = "Health: " + Player.Current.Health.ToString("F0") + "/" + Player.Current.MaxHealth.ToString("F0");
     }
 
     IEnumerator UpdateWaveText()
