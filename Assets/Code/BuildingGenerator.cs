@@ -23,17 +23,6 @@ public class BuildingGenerator : MonoBehaviour
         roofMiddleTiles = FindAllTiles("roof_middle");
     }
 
-    private void Update()
-    {
-        // TESTING ONLY
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            int randomHeight = Random.Range(4, 10);
-            int randomwidth = Random.Range(3, 10);
-            Build(randomwidth, randomHeight, Vector3.zero);
-        }
-    }
-
     public void Build(int width, int height, Vector3 startPos)
     {
         int wallHeight = 2;

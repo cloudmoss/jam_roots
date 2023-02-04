@@ -48,5 +48,20 @@ public class test : MonoBehaviour
         {
             gameObject.GetComponent<ScreenShake>().Shake(0.7f, 0.5f, 2f);
         }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos.z = 0;
+            gameObject.GetComponent<BloodSplatter>().BloodSplat(mousePos);
+        }
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            int randomHeight = Random.Range(4, 10);
+            int randomwidth = Random.Range(3, 10);
+            gameObject.GetComponent<BuildingGenerator>().Build(randomwidth, randomHeight, Vector3.zero);
+        }
+
     }
 }

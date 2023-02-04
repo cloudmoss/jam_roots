@@ -1804,7 +1804,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1408767292}
-  - component: {fileID: 1408767293}
   m_Layer: 0
   m_Name: ResourceControl
   m_TagString: Untagged
@@ -1827,19 +1826,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1408767293
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1408767290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8244f61f91bee9e42a302e7dfe865550, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  resourceText: {fileID: 1387502431}
 --- !u!1 &1439725773
 GameObject:
   m_ObjectHideFlags: 0
@@ -1855,6 +1841,7 @@ GameObject:
   - component: {fileID: 1439725779}
   - component: {fileID: 1439725780}
   - component: {fileID: 1439725781}
+  - component: {fileID: 1439725782}
   m_Layer: 0
   m_Name: GameControl
   m_TagString: Untagged
@@ -1969,6 +1956,20 @@ MonoBehaviour:
   - {fileID: -1851572851, guid: d0e638f742f9a1b42b89e855696b4259, type: 3}
   - {fileID: -1380545429, guid: d0e638f742f9a1b42b89e855696b4259, type: 3}
   - {fileID: 193914647, guid: d0e638f742f9a1b42b89e855696b4259, type: 3}
+--- !u!114 &1439725782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439725773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cb07d63b4bf514c976d5647927e2b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bloodPrefab: {fileID: 4141722372973200199, guid: f0324b0d49c8fa844b0e08a38a191c7b, type: 3}
+  maxBloodSplatters: 10
 --- !u!1 &1541838602
 GameObject:
   m_ObjectHideFlags: 0
@@ -2103,7 +2104,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1642017255}
-  - component: {fileID: 1642017254}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -2111,20 +2111,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1642017254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1642017253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27cb07d63b4bf514c976d5647927e2b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bloodPrefab: {fileID: 4141722372973200199, guid: f0324b0d49c8fa844b0e08a38a191c7b, type: 3}
-  maxBloodSplatters: 10
 --- !u!4 &1642017255
 Transform:
   m_ObjectHideFlags: 0

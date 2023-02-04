@@ -11,17 +11,7 @@ public class BloodSplatter : MonoBehaviour
     private float minScale = 0.01f;
     private float maxScale = 0.1f;
 
-    private void Update()
-    {
-        // FOR TESTING ONLY 
-        if(Input.GetMouseButtonDown(0)) {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0;
-            BloodSplat(mousePos);
-        }
-    }
-
-    void BloodSplat(Vector3 bloodPos)
+    public void BloodSplat(Vector3 bloodPos)
     {
         // Randomly generate the blood splatters
         for (int i = 0; i < maxBloodSplatters; i++)
