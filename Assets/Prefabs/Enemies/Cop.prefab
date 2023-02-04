@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3183757016201017460}
   - component: {fileID: 1917201485317059260}
   - component: {fileID: 522601621174110139}
+  - component: {fileID: 1535476985383231094}
   m_Layer: 0
   m_Name: Cop
   m_TagString: Untagged
@@ -97,7 +98,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 582f076c5600c0d408999efd27c7ac4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
   _deathPrefabs:
   - {fileID: 3283061196516813484, guid: 30d2616ef6768524c8e4884e6798f782, type: 3}
   _speed: 2
+  _damage: 0
+  _meleeAttackRate: 0
   _difficultyRating: 2
+--- !u!114 &1535476985383231094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3151402284311717735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4756247e5d3dce4cb8cc00e2a7e54f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shootingRange: 5
+  _shootingCooldown: 3
+  _damage: 1
+  _velocity: 20
+  _inaccuracy: 4
+  _bulletFX: {fileID: 2976472485242474481, guid: 071b290924d4d424490828e0afe062ce, type: 3}

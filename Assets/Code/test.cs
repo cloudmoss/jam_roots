@@ -32,15 +32,6 @@ public class test : MonoBehaviour
             musicControl.ChangeSong("Traveler");
         }
 
-        if (Input.GetKey(KeyCode.W))
-        {
-            resourceControl.AddResources(1);
-        }
-
-        if (Input.GetKey(KeyCode.E))
-        {
-            resourceControl.UseResources(1);
-        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
