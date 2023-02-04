@@ -8,8 +8,6 @@ public class Tentacle : MonoBehaviour
 {
     private static Tentacle _currentlySelected;
 
-    public Vector2Int startPosition;
-    public Vector2Int endPosition;
     public int length;
 
     [SerializeField] private Material _material;
@@ -18,6 +16,7 @@ public class Tentacle : MonoBehaviour
     [SerializeField] private GameObject _handle;
     [SerializeField] private float _handleRadius = 0.5f;
 
+    private CircleCollider2D _collider;
     private Entity _entity = new Entity("Tentacle", true);
     private Task<List<Tile>> _pathTask = null;
     private MeshFilter _filter;
@@ -26,14 +25,22 @@ public class Tentacle : MonoBehaviour
     private bool _grabbed = false;
     private Vector2Int _targetPos;
     private bool _recalculating = false;
+    private Vector2Int _startPosition;
+    private Vector2Int _endPosition;
+    private Rigidbody2D _rb;
 
     private void Awake() 
     {
-        endPosition = startPosition;
-        _targetPos = endPosition;
+        _startPosition = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
+        _endPosition = _startPosition;
+        _targetPos = _endPosition;
         _filter = gameObject.AddComponent<MeshFilter>();
         _renderer = gameObject.AddComponent<MeshRenderer>();
         _renderer.material = _material;
+        _collider = _handle.AddComponent<CircleCollider2D>();
+        _collider.radius = _handleRadius;
+        _rb = gameObject.AddComponent<Rigidbody2D>();
+        _rb.gravityScale = 0f;
     }
 
     public void Move(Vector2Int position)
@@ -41,7 +48,7 @@ public class Tentacle : MonoBehaviour
         Debug.Log("Move to " + position);
 
         //_entity.ClearBlockers();
-        _pathTask = Pathfinding.GetPathAsync(startPosition, position, length);
+        _pathTask = Pathfinding.GetPathAsync(_startPosition, position, length);
         StartCoroutine(WaitForPath());
         _recalculating = true;
     }
@@ -66,7 +73,7 @@ public class Tentacle : MonoBehaviour
         }
 
         _pathTask.Dispose();
-        endPosition = path[path.Count - 1].Position;
+        _endPosition = path[path.Count - 1].Position;
 
         GenerateMesh();
         _recalculating = false;
@@ -199,9 +206,16 @@ public class Tentacle : MonoBehaviour
             }
         }
 
-        if (_targetPos != endPosition && !_recalculating)
+        if (_targetPos != _endPosition && !_recalculating)
         {
             Move(_targetPos);
+        }
+    }
+    
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.TryGetComponent<EnemyBase>(out var enemy)) {
+            enemy.Kill();
+            Debug.Log("Killed enemy");
         }
     }
 }
