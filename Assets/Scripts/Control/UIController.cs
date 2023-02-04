@@ -5,8 +5,14 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
+    public static UIController Current { get; private set; }
+
     [SerializeField] private Text _healthText;
     [SerializeField] private Text _waveText;
+
+    private void Awake() {
+        Current = this;
+    }
 
     void Start()
     {
@@ -14,7 +20,7 @@ public class UIController : MonoBehaviour
         StartCoroutine(UpdateWaveText());
     }
 
-    void UpdateHealthText()
+    public void UpdateHealthText()
     {
         _healthText.text = "Health: " + Player.Current.Health.ToString("F0") + "/" + Player.Current.MaxHealth.ToString("F0");
     }

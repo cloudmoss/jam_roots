@@ -8,11 +8,18 @@ using UnityEngine.UI;
 public class ResourceClass
 {
     public string Name { get { return _name; } }
-    public int Amount { get; set; }
+    public int Amount { get { return _amount; } set { _amount = value; } }
     public Sprite Sprite { get { return _sprite; } }
 
     [SerializeField] private string _name;
+    [SerializeField] private int _amount;
     [SerializeField] private Sprite _sprite;
+
+    public ResourceClass(string name, int amount)
+    {
+        _name = name;
+        _amount = amount;
+    }
 }
 
 public class ResourceControl : MonoBehaviour
@@ -24,11 +31,12 @@ public class ResourceControl : MonoBehaviour
 
     private Dictionary<ResourceClass, Text> _resourceTexts = new Dictionary<ResourceClass, Text>();
     private Dictionary<string, Coroutine> _bounceCoros = new Dictionary<string, Coroutine>();
-
+    private Color _resourceColor;
 
     private void Awake() 
     {
         Current = this;
+        _resourceColor = _resourcePrefab.GetComponentInChildren<Text>().color;
     }
 
     void Start()
@@ -40,7 +48,7 @@ public class ResourceControl : MonoBehaviour
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            AddResources("Biomass", 1);
+            AddResources("Biomass", 25);
         }
     }
 
@@ -55,6 +63,24 @@ public class ResourceControl : MonoBehaviour
 
             _resourceTexts.Add(resource, txt);
             _bounceCoros.Add(resource.Name, null);
+        }
+    }
+
+    public bool TrySpend(ResourceClass[] costs)
+    {
+        if (CanAfford(costs))
+        {
+            foreach (var cost in costs)
+            {
+                UseResources(cost.Name, cost.Amount);
+            }
+
+            return true;
+        }
+        else
+        {
+            FlashResourceText(costs);
+            return false;
         }
     }
 
@@ -84,6 +110,25 @@ public class ResourceControl : MonoBehaviour
         return _resources.FirstOrDefault(r => r.Name == resource).Amount >= price;
     }
 
+    public bool CanAfford(ResourceClass[] resources)
+    {
+        foreach (var resource in resources)
+        {
+            if (!CanAfford(resource.Name, resource.Amount))
+                return false;
+        }
+
+        return true;
+    }
+
+    public void FlashResourceText(ResourceClass[] resources)
+    {
+        foreach (var resource in resources)
+        {
+            StartCoroutine(FlashResourceTextCoroutine(resource.Name));
+        }
+    }
+
     public void FlashResourceText(string resource)
     {
         StartCoroutine(FlashResourceTextCoroutine(resource));
@@ -92,7 +137,6 @@ public class ResourceControl : MonoBehaviour
     IEnumerator FlashResourceTextCoroutine(string resource)
     {
         var rclass = _resources.FirstOrDefault(r => r.Name == resource);
-        var originalColor = _resourceTexts[rclass].color;
         _resourceTexts[rclass].transform.localScale = Vector3.one * 1.2f;
 
         for (int i = 0; i < 3; i++)
@@ -104,7 +148,7 @@ public class ResourceControl : MonoBehaviour
         }
 
         _resourceTexts[rclass].transform.localScale = Vector3.one * 1f;
-        _resourceTexts[rclass].color = originalColor;
+        _resourceTexts[rclass].color = _resourceColor;
     }
 
     IEnumerator BounceResourceTextCoroutine(string resource)

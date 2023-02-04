@@ -6,22 +6,33 @@ using UnityEngine.UI;
 
 public class ActionButton : MonoBehaviour
 {
-    public UnityEvent OnClick;
+    [System.Serializable]
+    public class Definition
+    {
+        public string title;
+        public string description;
+        public System.Action onClick;
+        public Sprite sprite;
+        public ResourceClass[] resourceList;
+    }
 
-    [SerializeField] private string _title;
-    [SerializeField] private string _description;
+    public Definition definition;
 
     private Button _button;
     private TooltipDefinition _tooltip;
 
 
-    void Awake()
+    public void Init()
     {
         _tooltip = gameObject.AddComponent<TooltipDefinition>();
-        _tooltip.title = _title;
-        _tooltip.body = _description;
+        _tooltip.title = definition.title;
+        _tooltip.body = definition.description;
+        _tooltip.resourceList = definition.resourceList;
+
+        var icon = transform.Find("Icon").GetComponent<Image>();
+        icon.sprite = definition.sprite;
 
         _button = GetComponent<Button>();
-        _button.onClick.AddListener(() => OnClick.Invoke());
+        _button.onClick.AddListener(() => definition.onClick?.Invoke());
     }
 }

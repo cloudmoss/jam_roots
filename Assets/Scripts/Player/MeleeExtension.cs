@@ -11,11 +11,6 @@ public class MeleeExtension : TentacleExtension
 
     private float _timer = 0f;
 
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         if (_timer >= _cooldown)
@@ -27,9 +22,8 @@ public class MeleeExtension : TentacleExtension
             {
                 enemiesInRange[0].DealDamage(_damage);
                 StartCoroutine(Animate(enemiesInRange[0].transform.position));
+                _timer = 0f;
             }
-
-            _timer = 0f;
         }
         else
         {

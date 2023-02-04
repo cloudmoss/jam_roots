@@ -11,7 +11,9 @@ public class UnitInspectorUI : MonoBehaviour
     [SerializeField] private Text _title;
     [SerializeField] private Text _healthText;
     [SerializeField] private Image _healthBar;
+    [SerializeField] private ActionButton _actionButtonPrefab;
 
+    private List<GameObject> _actionButtons = new List<GameObject>();
     private bool _isOpen;
 
     private void Awake() {
@@ -22,6 +24,7 @@ public class UnitInspectorUI : MonoBehaviour
     {
         Close();
         StartCoroutine(Refresh());
+        _actionButtonPrefab.gameObject.SetActive(false);
     }
 
     IEnumerator Refresh()
@@ -42,7 +45,10 @@ public class UnitInspectorUI : MonoBehaviour
     {
         CurrentEntity = entity;
         _isOpen = true;
-        Populate();
+
+        var buttons = entity.GetActionButtons();
+
+        Populate(buttons);
     }
 
     public void Close()
@@ -50,9 +56,28 @@ public class UnitInspectorUI : MonoBehaviour
         _isOpen = false;
     }
 
-    void Populate()
+    void Populate(ActionButton.Definition[] buttonDefs)
     {
+        foreach (var button in _actionButtons)
+        {
+            Destroy(button);
+        }
+
+        _actionButtons.Clear();
+
         _title.text = CurrentEntity.Name;
+
+        if (buttonDefs != null)
+        {
+            foreach (var buttonDef in buttonDefs)
+            {
+                var buttonInst = Instantiate(_actionButtonPrefab, _actionButtonPrefab.transform.parent);
+                buttonInst.gameObject.SetActive(true);
+                buttonInst.definition = buttonDef;
+                buttonInst.Init();
+                _actionButtons.Add(buttonInst.gameObject);
+            }
+        }
     }
 
     void Update()

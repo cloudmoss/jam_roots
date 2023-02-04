@@ -12,6 +12,8 @@ public class EnemyBase : Entity
     [SerializeField] private Sprite[] _walkCycle;
     [SerializeField] private float _animationFps = 15f;
     [SerializeField] private GameObject[] _deathPrefabs;
+    [SerializeField] private GameObject _gorePilePrefab;
+    [SerializeField] private int _attackDist = 3;
     [SerializeField] private float _speed = 2f;
     [SerializeField] private float _damage = 1f;
     [SerializeField] private float _meleeAttackRate = 1f;
@@ -52,8 +54,6 @@ public class EnemyBase : Entity
                 canMove = true;
             }
         }
-
-        _spriteRenderer.sprite = _walkCycle[(int)(Time.time * _animationFps) % _walkCycle.Length];
 
         if (canMove && _pathingCoroutine == null)
         {
@@ -99,12 +99,13 @@ public class EnemyBase : Entity
             }
         }
 
-        while (path.Count > 0)
+        while (path.Count > _attackDist)
         {
             var nextPos = path[0].Position;
 
             while (Vector2.Distance(transform.position, nextPos) > 0.1f)
             {
+                _spriteRenderer.sprite = _walkCycle[(int)(Time.time * _animationFps) % _walkCycle.Length];
                 transform.position = Vector2.MoveTowards(transform.position, nextPos, _speed * Time.deltaTime);
                 yield return null;
             }
@@ -117,6 +118,7 @@ public class EnemyBase : Entity
 
     public void KillFx()
     {
+        Instantiate(_gorePilePrefab, (Vector2)transform.position + (Random.insideUnitCircle * 0.3f), Quaternion.identity);
         ResourceControl.Current.AddResources("Biomass", 1);
         Instantiate(_deathPrefabs[Random.Range(0, _deathPrefabs.Length)], transform.position, Quaternion.Euler(0, 0, Random.Range(0, 360)));
     }

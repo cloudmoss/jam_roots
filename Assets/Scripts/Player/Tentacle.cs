@@ -20,7 +20,9 @@ public class Tentacle : Entity
     [SerializeField] private float _handleRadius = 0.5f;
     [SerializeField] private float _attackRange = 0.5f;
     [SerializeField] private float _movementSpeed = 1f;
+    [SerializeField] private Sprite _burrowIcon;
 
+    private bool _isRooted;
     private TentacleExtension _extension;
     private MeshFilter _filter;
     private MeshRenderer _renderer;
@@ -33,7 +35,7 @@ public class Tentacle : Entity
     private Vector2Int _currentlyMovingTo;
     private MeshCollider _collider;
 
-    private void Awake() 
+    public void Init() 
     {
         _startPosition = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
         _endPosition = _startPosition;
@@ -44,6 +46,60 @@ public class Tentacle : Entity
         _collider = gameObject.AddComponent<MeshCollider>();
         _currentlyMovingTo = _startPosition;
         _extension = GetComponentInChildren<TentacleExtension>();
+    }
+
+    public override ActionButton.Definition[] GetActionButtons()
+    {
+        if (_isRooted) return null;
+
+        var buttons = new List<ActionButton.Definition>();
+        
+        var burrowCost = new ResourceClass[] { new ResourceClass("Biomass", 100) };
+        buttons.Add(new ActionButton.Definition()
+        {
+            sprite = _burrowIcon,
+            title = "Burrow",
+            
+            description = "Burrow into the ground, making the root permanently fixed in place, but sprouting two new roots.",
+            resourceList = burrowCost,
+            onClick = () =>
+            {
+                if (ResourceControl.Current.TrySpend(burrowCost))
+                {
+                    Burrow();
+                    UnitInspectorUI.Current.Open(this);
+                }
+            }
+        });
+        
+
+        foreach(var ext in Player.Extensions)
+        {
+            buttons.Add(new ActionButton.Definition()
+            {
+                sprite = ext.GetComponent<SpriteRenderer>().sprite,
+                resourceList = ext.Cost,
+                title = ext.Name,
+                description = ext.Description,
+                onClick = () => {
+                    if (ResourceControl.Current.TrySpend(ext.Cost))
+                    {
+                        AddExtension(ext);
+                    }
+                }
+            });
+        }
+
+        return buttons.ToArray();
+    }
+
+    public void Burrow()
+    {
+        _isRooted = true;
+        Player.Current.CreateTentacle(_endPosition, Player.Extensions.FirstOrDefault(e => e.Name == "Club"));
+        Player.Current.CreateTentacle(_endPosition, Player.Extensions.FirstOrDefault(e => e.Name == "Club"));
+
+        Destroy(gameObject.GetComponentInChildren<TentacleExtension>().gameObject);
     }
 
     public void AddExtension(TentacleExtension extension)
@@ -237,7 +293,7 @@ public class Tentacle : Entity
 
         //Debug.DrawLine(new Vector2(startPosition.x, startPosition.y), new Vector2(mouseWorldPos.x, mouseWorldPos.y), Color.red);
 
-        if (_currentlySelected == null && dist < _handleRadius)
+        if (!_isRooted && _currentlySelected == null && dist < _handleRadius)
         {
             _handle.transform.localScale = Vector3.one + (Vector3.one * (0.25f * Mathf.Sin(Time.time * 4f)));
 
@@ -281,7 +337,14 @@ public class Tentacle : Entity
         {
             if (_movementCoroutine == null)
             {
-                _handle.transform.position = new Vector3(_endPosition.x, _endPosition.y, 0);
+                if (_isRooted)
+                {
+                    _handle.SetActive(false);
+                }
+                else
+                {
+                    _handle.transform.position = new Vector3(_endPosition.x, _endPosition.y, 0);
+                }
             }
         }
     }

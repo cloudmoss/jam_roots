@@ -33,10 +33,18 @@ public class EnemyController : MonoBehaviour
             currency -= enemy.DifficultyRating;
             var inst = Instantiate(enemy, new Vector3(spawnPoint.x, spawnPoint.y, 0), Quaternion.identity);
             EnemyInstances.Add(inst);
-            inst.OnDeath += () => EnemyInstances.Remove(inst);
+            inst.OnDeath += () => {
+                EnemyInstances.Remove(inst);
+            };
 
             yield return new WaitForSeconds(0.5f);
         }
+    }
+
+    public void RegisterGore(GorePile gore)
+    {
+        GoreInstances.Add(gore);
+        gore.OnConsumed += () => GoreInstances.Remove(gore);
     }
 
     private void Update() {

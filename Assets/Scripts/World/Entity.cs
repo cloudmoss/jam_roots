@@ -10,17 +10,24 @@ public class Entity : MonoBehaviour
     public event System.Action OnMove;
 
     public string Name { get { return _entityName; } }
+    public string Description { get { return _description; } }
     public bool Blocking { get { return _blocking; } }
     public float Health { get { return _health; } }
     public float MaxHealth { get { return _maxHealth; } }
 
     [Header("Entity Settings")]
     [SerializeField] private string _entityName;
+    [SerializeField] private string _description;
     [SerializeField] private float _health = 10f;
     [SerializeField] private float _maxHealth = 10f;
     [SerializeField] private bool _blocking;
 
     private Tile[] _occupiedTiles = new Tile[0];
+
+    public virtual ActionButton.Definition[] GetActionButtons()
+    {
+        return null;
+    }
 
     public void SetHealth(float health)
     {

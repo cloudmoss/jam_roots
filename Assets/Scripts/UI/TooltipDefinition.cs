@@ -8,6 +8,7 @@ public class TooltipDefinition : MonoBehaviour, IPointerEnterHandler, IPointerEx
 {
     public string title;
     public string body;
+    public ResourceClass[] resourceList;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
