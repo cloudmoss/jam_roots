@@ -61,6 +61,7 @@ public class Player : Entity
                 tentacle.Move(((Vector2)transform.position + Vector2.down * 3).ToVector2Int());
                 UIController.Current.UpdateHealthText();
                 _spriteRenderer.sprite = _stages[level - 1];
+                UnitInspectorUI.Current.Open(this);
             }
         });
 

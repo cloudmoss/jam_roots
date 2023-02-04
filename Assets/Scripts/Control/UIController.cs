@@ -9,6 +9,7 @@ public class UIController : MonoBehaviour
 
     [SerializeField] private Text _healthText;
     [SerializeField] private Text _waveText;
+    [SerializeField] private Image _healthBar;
 
     private void Awake() {
         Current = this;
@@ -23,6 +24,7 @@ public class UIController : MonoBehaviour
     public void UpdateHealthText()
     {
         _healthText.text = "Health: " + Player.Current.Health.ToString("F0") + "/" + Player.Current.MaxHealth.ToString("F0");
+        _healthBar.fillAmount = Player.Current.Health / Player.Current.MaxHealth;
     }
 
     IEnumerator UpdateWaveText()

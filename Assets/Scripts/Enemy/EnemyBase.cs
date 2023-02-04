@@ -5,19 +5,21 @@ using UnityEngine;
 public class EnemyBase : Entity
 {
     public int DifficultyRating {get { return _difficultyRating; }}
+    public int MinWave {get { return _minWave; }}
     public bool canMove;
 
     [Header("Enemy Settings")]
 
     [SerializeField] private Sprite[] _walkCycle;
     [SerializeField] private float _animationFps = 15f;
-    [SerializeField] private GameObject[] _deathPrefabs;
+    [SerializeField] private BloodSplatter[] _deathPrefabs;
     [SerializeField] private GameObject _gorePilePrefab;
     [SerializeField] private int _attackDist = 3;
     [SerializeField] private float _speed = 2f;
     [SerializeField] private float _damage = 1f;
     [SerializeField] private float _meleeAttackRate = 1f;
     [SerializeField] private int _difficultyRating;
+    [SerializeField] private int _minWave = 1;
 
     private Coroutine _pathingCoroutine;
     private CircleCollider2D _collider;
@@ -120,6 +122,11 @@ public class EnemyBase : Entity
     {
         Instantiate(_gorePilePrefab, (Vector2)transform.position + (Random.insideUnitCircle * 0.3f), Quaternion.identity);
         ResourceControl.Current.AddResources("Biomass", 1);
-        Instantiate(_deathPrefabs[Random.Range(0, _deathPrefabs.Length)], transform.position, Quaternion.Euler(0, 0, Random.Range(0, 360)));
+
+        if (true)
+        {
+            var inst = Instantiate(_deathPrefabs[Random.Range(0, _deathPrefabs.Length)], transform.position, Quaternion.Euler(0, 0, Random.Range(0, 360)));
+            inst.BloodSplat(transform.position);
+        }
     }
 }

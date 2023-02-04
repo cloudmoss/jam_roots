@@ -103,6 +103,7 @@ public class BulletController : MonoBehaviour
         {
             bullet.position += bullet.velocity * Time.deltaTime;
             bullet.transform.position = bullet.position;
+            bullet.transform.right = bullet.velocity.normalized;
         }
     }
 
