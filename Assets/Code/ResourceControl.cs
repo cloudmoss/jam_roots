@@ -1,59 +1,97 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using System.Linq;
 using UnityEngine.UI;
+
+[System.Serializable]
+public class ResourceClass
+{
+    public string Name { get { return _name; } }
+    public int Amount { get; set; }
+    public Sprite Sprite { get { return _sprite; } }
+
+    [SerializeField] private string _name;
+    [SerializeField] private Sprite _sprite;
+}
 
 public class ResourceControl : MonoBehaviour
 {
-    private int resourceAmount = 0;
-    [SerializeField] private Text resourceText;
-    private Image resourceImage;
+    public static ResourceControl Current { get; private set; }
 
-    // Start is called before the first frame update
+    [SerializeField] private ResourceClass[] _resources;
+    [SerializeField] private GameObject _resourcePrefab;
+
+    private Dictionary<ResourceClass, Text> _resourceTexts = new Dictionary<ResourceClass, Text>();
+
+    private void Awake() 
+    {
+        Current = this;
+    }
+
     void Start()
     {
-        resourceImage = resourceText.GetComponentInChildren<Image>();
+        Populate();
+        _resourcePrefab.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
+    void Populate()
     {
-        resourceImage.fillAmount = (resourceAmount / 100f);
-        resourceText.text = resourceAmount.ToString();
-    }
-
-    public void AddResources(int amount)
-    {
-        resourceAmount += amount;
-    }
-
-    public void UseResources(int amount)
-    {
-        if (CanAfford(amount))
+        foreach (var resource in _resources)
         {
-            resourceAmount -= amount;
-        } else
-        {
-            CantAfford();
+            var resourceObject = Instantiate(_resourcePrefab, _resourcePrefab.transform.parent);
+            resourceObject.GetComponentInChildren<Image>().sprite = resource.Sprite;
+            var txt = resourceObject.GetComponentInChildren<Text>();
+            txt.text = string.Format("{0}: {1}", resource.Name, resource.Amount);
+
+            _resourceTexts.Add(resource, txt);
         }
     }
 
-    public void CantAfford()
+    void UpdateResourceText(string resource)
     {
-        // not enough resources
-        StartCoroutine(FlashTextColor(1));
+        // Ugly af
+        var rclass = _resources.FirstOrDefault(r => r.Name == resource);
+        _resourceTexts[rclass].text = string.Format("{0}: {1}", resource, rclass.Amount);
     }
 
-    public bool CanAfford(int price)
+    public void AddResources(string resource, int amount)
     {
-        return resourceAmount >= price;
+        _resources.FirstOrDefault(r => r.Name == resource).Amount += amount;
+        UpdateResourceText(resource);
     }
 
-    public IEnumerator FlashTextColor(float t)
+    public void UseResources(string resource, int amount)
     {
-        resourceText.color = Color.red;
-        yield return new WaitForSeconds(t);
-        resourceText.color = Color.white;
+        _resources.FirstOrDefault(r => r.Name == resource).Amount -= amount;
+        UpdateResourceText(resource);
+    }
+
+    public bool CanAfford(string resource, int price)
+    { 
+        return _resources.FirstOrDefault(r => r.Name == resource).Amount >= price;
+    }
+
+    public void FlashResourceText(string resource)
+    {
+        StartCoroutine(FlashResourceTextCoroutine(resource));
+    }
+
+    IEnumerator FlashResourceTextCoroutine(string resource)
+    {
+        var rclass = _resources.FirstOrDefault(r => r.Name == resource);
+        var originalColor = _resourceTexts[rclass].color;
+        _resourceTexts[rclass].transform.localScale = Vector3.one * 1.2f;
+
+        for (int i = 0; i < 3; i++)
+        {
+            _resourceTexts[rclass].color = Color.red;
+            yield return new WaitForSeconds(0.1f);
+            _resourceTexts[rclass].color = Color.white;
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        _resourceTexts[rclass].transform.localScale = Vector3.one * 1f;
+        _resourceTexts[rclass].color = originalColor;
     }
 }

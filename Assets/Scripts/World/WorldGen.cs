@@ -9,6 +9,7 @@ public class WorldGen
 
     public int cityBlockSize = 10;
     public Tile[,] grid;
+    public RoadTiler roadTiler;
 
     public Vector2Int[] SpawnPoints { get; private set; }
 
@@ -43,7 +44,14 @@ public class WorldGen
             mr.material = new Material(Shader.Find("Unlit/Texture"));
             mr.material.mainTexture = def.Texture;
             
-            mf.mesh = GenerateMeshFor(def);
+            if (def.Name == "Road")
+            {
+                mf.mesh = GenerateRoadMesh();
+            }
+            else
+            {
+                mf.mesh = GenerateMeshFor(def);
+            }
         }
 
         SetupSpawnPoints();
@@ -58,7 +66,7 @@ public class WorldGen
     void SetupSpawnPoints()
     {
         var spawns = new List<Vector2Int>();
-        var tile = TileLibrary.GetTile("Pavement");
+        var tile = TileLibrary.GetTile("Road");
 
         for (int x = 0; x < size; x++)
         {
@@ -78,7 +86,7 @@ public class WorldGen
     void GenerateStreets()
     {
         var roadWidth = 2;
-        var tile = TileLibrary.GetTile("Pavement");
+        var tile = TileLibrary.GetTile("Road");
 
         // vertical streets
         for(int x = cityBlockSize; x < size - cityBlockSize; x += cityBlockSize + roadWidth)
@@ -158,6 +166,62 @@ public class WorldGen
                     uvs.Add(new Vector2(1, 0));
                     uvs.Add(new Vector2(1, 1));
                     uvs.Add(new Vector2(0, 1));
+                }
+            }
+        }
+
+        mesh.vertices = verts.ToArray();
+        mesh.triangles = tris.ToArray();
+        mesh.uv = uvs.ToArray();
+        mesh.RecalculateBounds();
+
+        return mesh;
+    }
+
+
+    public Mesh GenerateRoadMesh()
+    {
+        var tiletype = TileLibrary.GetTile("Road");
+        var mesh = new Mesh();
+
+        var tris = new List<int>();
+        var verts = new List<Vector3>();
+        var uvs = new List<Vector2>();
+        var offset = new Vector2(0, 0);
+
+        for (int x = 0; x < size; x++)
+        {
+            for (int y = 0; y < size; y++)
+            {
+                var tile = grid[x, y];
+                if (tile.Def == tiletype)
+                {
+                    verts.Add(new Vector3(tile.Position.x + offset.x - 0.5f, tile.Position.y + offset.y - 0.5f));
+                    verts.Add(new Vector3(tile.Position.x + offset.x + 0.5f, tile.Position.y + offset.y - 0.5f));
+                    verts.Add(new Vector3(tile.Position.x + offset.x + 0.5f, tile.Position.y + offset.y + 0.5f));
+                    verts.Add(new Vector3(tile.Position.x + offset.x - 0.5f, tile.Position.y + offset.y + 0.5f));
+
+                    tris.Add(verts.Count - 3);
+                    tris.Add(verts.Count - 4);
+                    tris.Add(verts.Count - 2);
+
+                    tris.Add(verts.Count - 2);
+                    tris.Add(verts.Count - 4);
+                    tris.Add(verts.Count - 1);
+
+                    var roadUvs = roadTiler.GetUvForTile(World.Current.GetNeighbours(grid[x, y]));
+
+                    if (roadUvs != null)
+                    {
+                        uvs.AddRange(roadUvs);
+                    }
+                    else
+                    {
+                        uvs.Add(new Vector2(0, 0));
+                        uvs.Add(new Vector2(0, 0));
+                        uvs.Add(new Vector2(0, 0));
+                        uvs.Add(new Vector2(0, 0));
+                    }
                 }
             }
         }

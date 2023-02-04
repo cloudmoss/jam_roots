@@ -198,7 +198,7 @@ public static class Pathfinding
                     }
                     else
                     {
-                        if (cost < range)
+                        if (Mathf.FloorToInt(cost) < range)
                         {
                             newOpen.Add(neighborTile);
                         }

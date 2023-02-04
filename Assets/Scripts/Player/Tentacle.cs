@@ -48,7 +48,7 @@ public class Tentacle : MonoBehaviour
 
     public void Move(Vector2Int position)
     {
-        Debug.Log("Move to " + position);
+        //Debug.Log("Move to " + position);
         if (_movementCoroutine != null)
             StopCoroutine(_movementCoroutine);
         //_entity.ClearBlockers();
@@ -72,7 +72,6 @@ public class Tentacle : MonoBehaviour
             yield break;
         }
         
-        Debug.Log(path.Count);
         var last = path[0].Position;
         _currentVertices = new Vector2[path.Count];
 

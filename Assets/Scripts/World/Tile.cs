@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 [System.Serializable]
-public struct Tile
+public struct Tile : IEquatable<Tile>
 {
     public Vector2Int Position { get; private set; }
 
@@ -23,4 +23,11 @@ public struct Tile
     {
         return Position.GetHashCode();
     }
+
+
+    public bool Equals(Tile other)
+    {
+        return other.Position == Position;
+    }
+
 }

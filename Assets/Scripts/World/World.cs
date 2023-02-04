@@ -11,6 +11,7 @@ public class World : MonoBehaviour
     public static Tile[,] Grid { get { return Current._worldGen.grid; } }
 
     [SerializeField] private int _size = 100;
+    [SerializeField] private RoadTiler _roadTiler;
 
     private WorldGen _worldGen;
     private Texture2D _pathingTexture;
@@ -31,6 +32,10 @@ public class World : MonoBehaviour
         _pathingClearColors = new Color[_size * _size];
         _pathingTexture.SetPixels(_pathingClearColors);
         _pathingTexture.Apply();
+
+        _roadTiler.Init();
+        TileLibrary.GetTile("Road").OverrideTexture(_roadTiler.atlas);
+        _worldGen.roadTiler = _roadTiler;
     }
 
     void Start()
@@ -46,7 +51,7 @@ public class World : MonoBehaviour
         {
             for (int i = 0; i < tiles.Length; i++)
             {
-                _pathingTexture.SetPixel(tiles[i].Position.x, tiles[i].Position.y, new Color(0.7f, 1, 0.7f, 0.1f));
+                _pathingTexture.SetPixel(tiles[i].Position.x, tiles[i].Position.y, new Color(0.7f, 1, 0.7f, 0.05f));
             }
         }
 

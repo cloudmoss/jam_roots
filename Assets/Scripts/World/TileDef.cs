@@ -12,4 +12,9 @@ public class TileDef
     [SerializeField] private string _name;
     [SerializeField] private bool _isWalkable;
     [SerializeField] private Texture2D _texture;
+
+    public void OverrideTexture(Texture2D texture)
+    {
+        _texture = texture;
+    }
 }
