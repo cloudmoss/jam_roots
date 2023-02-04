@@ -52,5 +52,10 @@ public class test : MonoBehaviour
                 pause.ContinueGame();
             }
         }
+
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            gameObject.GetComponent<ScreenShake>().Shake(0.7f, 0.5f, 2f);
+        }
     }
 }

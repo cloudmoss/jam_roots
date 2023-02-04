@@ -24,6 +24,7 @@ public class ChangeSettings : MonoBehaviour
     public void ChangeVolume(float value)
     {
         PlayerPrefs.SetFloat("volume", value);
+        SaveSettings();
     }
 
     public void ToggleGore(bool goreOn)
@@ -34,6 +35,7 @@ public class ChangeSettings : MonoBehaviour
             goreInt = 1;
         }
         PlayerPrefs.SetInt("gore", goreInt);
+        SaveSettings();
     }
 
 }

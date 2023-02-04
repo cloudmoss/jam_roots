@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -34,7 +35,12 @@ public class MainMenu : MonoBehaviour
     // settings
     public void OpenSettings()
     {
-        settingsPanel.SetActive(true);
+        if (creditsPanel.activeInHierarchy == true)
+        {
+            CloseCredits();
+        }
+
+        settingsPanel.SetActive(!settingsPanel.activeInHierarchy);
     }
 
     public void CloseSettings()
@@ -60,7 +66,11 @@ public class MainMenu : MonoBehaviour
     // credits
     public void OpenCredits()
     {
-        creditsPanel.SetActive(true);
+        if (settingsPanel.activeInHierarchy == true)
+        {
+            CloseSettings();
+        }
+        creditsPanel.SetActive(!creditsPanel.activeInHierarchy);
     }
 
     public void CloseCredits()
@@ -72,5 +82,6 @@ public class MainMenu : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+        Debug.Log("Exit game");
     }
 }
