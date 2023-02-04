@@ -4,14 +4,15 @@ using UnityEngine;
 using System.Linq;
 using System.Threading.Tasks;
 
-public class Tentacle : MonoBehaviour
+public class Tentacle : Entity
 {
     private static Tentacle _currentlySelected;
 
-    public Entity Entity { get { return _entity; } }
     public Vector2 EndPosition { get { return _endPosition; } }
+    public Vector2 TipFacingDirection { get; private set; } = Vector2.up;
     public int length;
 
+    [Header("Tentacle Settings")]
     [SerializeField] private Material _material;
     [SerializeField] private AnimationCurve _thicknessCurve;
     [SerializeField] private float _thickness;
@@ -20,8 +21,7 @@ public class Tentacle : MonoBehaviour
     [SerializeField] private float _attackRange = 0.5f;
     [SerializeField] private float _movementSpeed = 1f;
 
-    private CircleCollider2D _collider;
-    private Entity _entity = new Entity("Tentacle", true);
+    private TentacleExtension _extension;
     private MeshFilter _filter;
     private MeshRenderer _renderer;
     private Vector2[] _currentVertices;
@@ -31,19 +31,32 @@ public class Tentacle : MonoBehaviour
     private Vector2Int _endPosition;
     private Coroutine _movementCoroutine;
     private Vector2Int _currentlyMovingTo;
+    private MeshCollider _collider;
 
     private void Awake() 
     {
-        _entity.SetHealth(50f, 50f);
         _startPosition = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
         _endPosition = _startPosition;
         _targetPos = _endPosition;
         _filter = gameObject.AddComponent<MeshFilter>();
         _renderer = gameObject.AddComponent<MeshRenderer>();
         _renderer.material = _material;
-        _collider = _handle.AddComponent<CircleCollider2D>();
-        _collider.radius = _handleRadius;
+        _collider = gameObject.AddComponent<MeshCollider>();
         _currentlyMovingTo = _startPosition;
+        _extension = GetComponentInChildren<TentacleExtension>();
+    }
+
+    public void AddExtension(TentacleExtension extension)
+    {
+        if (_extension != null)
+        {
+            Destroy(_extension.gameObject);
+        }
+
+        var inst = Instantiate(extension, _endPosition.ToVector2(), Quaternion.identity);
+        inst.transform.parent = transform;
+
+        _extension = inst;
     }
 
     public void Move(Vector2Int position)
@@ -84,6 +97,12 @@ public class Tentacle : MonoBehaviour
 
         pathTask.Dispose();
         _endPosition = path[path.Count - 1].Position;
+        _extension.transform.position = _endPosition.ToVector2();
+
+        if (path.Count > 1)
+        {
+            TipFacingDirection = (path[path.Count - 1].Position - path[path.Count - 2].Position).ToVector2().normalized;
+        }
 
         GenerateMesh();
         //_entity.SetOccupiedTiles(path.Skip(2).ToArray());
@@ -138,11 +157,6 @@ public class Tentacle : MonoBehaviour
     public bool TestHit(Vector2 position)
     {
         return (Vector2.Distance(position, _endPosition) < _handleRadius);
-    }
-
-    public void DealDamage(float damage)
-    {
-        _entity.DealDamage(damage);
     }
 
     public void GenerateMesh()
@@ -209,6 +223,7 @@ public class Tentacle : MonoBehaviour
         mesh.vertices = vertices.ToArray();
         mesh.uv = uvs.ToArray();
         mesh.triangles = tris.ToArray();
+        _collider.sharedMesh = mesh;
 
         _filter.mesh = mesh;
     }
@@ -262,14 +277,11 @@ public class Tentacle : MonoBehaviour
                 Move(_targetPos);
             }
         }
-
-        var enemiesInRange = EnemyController.GetEnemiesInRange(_endPosition, _attackRange);
-
-        foreach(var enemy in enemiesInRange)
+        else
         {
-            if (enemy != null)
+            if (_movementCoroutine == null)
             {
-                enemy.Kill();
+                _handle.transform.position = new Vector3(_endPosition.x, _endPosition.y, 0);
             }
         }
     }

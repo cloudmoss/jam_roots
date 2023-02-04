@@ -3,28 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Entity
+public class Entity : MonoBehaviour
 {
     public event System.Action OnDamageTaken;
+    public event System.Action OnDeath;
     public event System.Action OnMove;
 
-    public string Name { get { return _name; } }
+    public string Name { get { return _entityName; } }
     public bool Blocking { get { return _blocking; } }
     public float Health { get { return _health; } }
     public float MaxHealth { get { return _maxHealth; } }
 
-    [SerializeField] private float _health = 100f;
-    [SerializeField] private float _maxHealth = 100f;
-    [SerializeField] private string _name;
+    [Header("Entity Settings")]
+    [SerializeField] private string _entityName;
+    [SerializeField] private float _health = 10f;
+    [SerializeField] private float _maxHealth = 10f;
     [SerializeField] private bool _blocking;
 
     private Tile[] _occupiedTiles = new Tile[0];
-
-    public Entity(string name, bool blocking)
-    {
-        _name = name;
-        _blocking = blocking;
-    }
 
     public void SetHealth(float health)
     {
@@ -61,6 +57,14 @@ public class Entity
 
     public void DealDamage(float damage)
     {
+        _health -= damage;
+
         OnDamageTaken?.Invoke();
+
+        if (_health <= 0)
+        {
+            OnDeath?.Invoke();
+            Destroy(gameObject);
+        }
     }
 }

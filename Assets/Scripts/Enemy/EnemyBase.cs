@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBase : MonoBehaviour
+public class EnemyBase : Entity
 {
-    public event System.Action OnDeath;
-
     public int DifficultyRating {get { return _difficultyRating; }}
     public bool canMove;
 
+    [Header("Enemy Settings")]
+
+    [SerializeField] private Sprite[] _walkCycle;
+    [SerializeField] private float _animationFps = 15f;
     [SerializeField] private GameObject[] _deathPrefabs;
     [SerializeField] private float _speed = 2f;
     [SerializeField] private float _damage = 1f;
@@ -24,6 +26,7 @@ public class EnemyBase : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _collider = gameObject.AddComponent<CircleCollider2D>();
         _collider.radius = _spriteRenderer.bounds.extents.x;
+        OnDeath += KillFx;
     }
 
     void Update()
@@ -37,7 +40,7 @@ public class EnemyBase : MonoBehaviour
                 if (_meleeCooldown <= 0)
                 {
                     _meleeCooldown = 1f / _meleeAttackRate;
-                    Player.Current.Damage(_damage);
+                    Player.Current.DealDamage(_damage);
                 }
                 else
                 {
@@ -49,6 +52,8 @@ public class EnemyBase : MonoBehaviour
                 canMove = true;
             }
         }
+
+        _spriteRenderer.sprite = _walkCycle[(int)(Time.time * _animationFps) % _walkCycle.Length];
 
         if (canMove && _pathingCoroutine == null)
         {
@@ -110,10 +115,9 @@ public class EnemyBase : MonoBehaviour
         _pathingCoroutine = null;
     }
 
-    public void Kill()
+    public void KillFx()
     {
+        ResourceControl.Current.AddResources("Biomass", 1);
         Instantiate(_deathPrefabs[Random.Range(0, _deathPrefabs.Length)], transform.position, Quaternion.Euler(0, 0, Random.Range(0, 360)));
-        OnDeath?.Invoke();
-        Destroy(gameObject);
     }
 }

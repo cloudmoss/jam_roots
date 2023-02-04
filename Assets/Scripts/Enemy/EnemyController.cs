@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
 {
     public static EnemyController Current { get; private set; }
     public static List<EnemyBase> EnemyInstances { get; private set; } = new List<EnemyBase>();
+    public static List<GorePile> GoreInstances { get; private set; } = new List<GorePile>();
 
     public int Wave { get; private set; } = 1;
     public float WaveTimer { get; private set; }
@@ -38,6 +39,11 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.P))
+            WaveTimer = 0;
+    }
+
     private void Start() {
         SpawnWave();
         StartCoroutine(WaveCountdown());
@@ -62,5 +68,10 @@ public class EnemyController : MonoBehaviour
     public static EnemyBase[] GetEnemiesInRange(Vector2 position, float range)
     {
         return EnemyInstances.Where(e => Vector2.Distance(e.transform.position, position) <= range).ToArray();
+    }
+
+    public static GorePile[] GetGoreInRange(Vector2 position, float range)
+    {
+        return GoreInstances.Where(g => Vector2.Distance(g.transform.position, position) <= range).ToArray();
     }
 }
