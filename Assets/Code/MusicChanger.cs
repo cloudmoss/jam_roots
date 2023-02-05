@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MusicChanger : MonoBehaviour
 {
-    public float volume = 0.35f;
+    private float _volume = 0.35f;
 
     [SerializeField] private string _waveMusic;
     [SerializeField] private string _peaceMusic;
@@ -22,10 +22,18 @@ public class MusicChanger : MonoBehaviour
     private void Start()
     {
         ChangeSong(_peaceMusic);
-
+        _volume *= Settings.volume;
 
         EnemyController.Current.OnWaveStart += () => ChangeSong(_waveMusic);
         EnemyController.Current.OnWaveCleared += () => ChangeSong(_peaceMusic);
+    }
+
+    private void Update() {
+        if (Settings.volume != audioSource.volume * 0.4f)
+        {
+            audioSource.volume = Settings.volume * _volume;
+        }
+        audioSource.volume = Settings.volume * _volume;
     }
 
     public void ChangeSong(string state)
@@ -40,9 +48,39 @@ public class MusicChanger : MonoBehaviour
                 } 
                 else
                 {
-                    audioSource.clip = songList[i];
+                    audioSource.volume = _volume;
+
+                    if (audioSource.clip != null)
+                        StartCoroutine(FadeMusicTo(1f, songList[i]));
+                    else
+                        audioSource.clip = songList[i];
+
+                    if (!audioSource.isPlaying)
+                        audioSource.Play();
+
+                    return;
                 }
             }
+        }
+    }
+
+    IEnumerator FadeMusicTo(float fadeTime, AudioClip clip)
+    {
+        float startVolume = _volume;
+
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * (Time.deltaTime / fadeTime);
+            yield return null;
+        }
+
+        audioSource.clip = clip;
+        audioSource.Play();
+
+        while(audioSource.volume < startVolume)
+        {
+            audioSource.volume += startVolume * (Time.deltaTime / fadeTime);
+            yield return null;
         }
     }
 }

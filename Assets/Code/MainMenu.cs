@@ -10,6 +10,10 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject creditsPanel;
     [SerializeField] GameObject settingsPanel;
 
+    private void Awake() {
+        Settings.LoadSettings();
+    }
+
     void Start()
     {
         creditsPanel.SetActive(false);

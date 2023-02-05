@@ -18,7 +18,7 @@ MonoBehaviour:
     _texture: {fileID: 2800000, guid: 92308ab5aefcea94d983662ffa14d26f, type: 3}
   - _name: Road
     _isWalkable: 1
-    _texture: {fileID: 2800000, guid: 50cdb845fef264848a7ed113e5cfc991, type: 3}
+    _texture: {fileID: 0}
   - _name: Grass
     _isWalkable: 1
-    _texture: {fileID: 2800000, guid: 67057f76c3a4ab54c89bb26b6a5ba6a4, type: 3}
+    _texture: {fileID: 2800000, guid: a3b59eebfff7a7541b86d0f24ba18b9c, type: 3}

@@ -54,6 +54,12 @@ MonoBehaviour:
   _damage: 10
   _range: 1.5
   _cooldown: 1
+  _hitSounds:
+  - {fileID: 8300000, guid: e31171dbbe8af994bb4e8415afa71b4e, type: 3}
+  - {fileID: 8300000, guid: a167cc8e52341444ba37715f21401a7d, type: 3}
+  - {fileID: 8300000, guid: d3febf610252e994eacdd609f4aa39b5, type: 3}
+  - {fileID: 8300000, guid: b69fc3d0fa174474bb0415fe8deaa4f7, type: 3}
+  - {fileID: 8300000, guid: ba6c5966af910344183703f2ab04be19, type: 3}
 --- !u!212 &7622628232572459563
 SpriteRenderer:
   m_ObjectHideFlags: 0

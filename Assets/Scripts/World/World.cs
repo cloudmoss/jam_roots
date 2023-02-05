@@ -9,6 +9,7 @@ public class World : MonoBehaviour
     public bool IsGenerated { get { return _worldGen.IsGenerated; } }
     public static World Current { get; private set; }
     public static Tile[,] Grid { get { return Current._worldGen.grid; } }
+    public BuildingGenerator BuildingGenerator { get; private set; }
 
     [SerializeField] private int _size = 100;
     [SerializeField] private RoadTiler _roadTiler;
@@ -22,6 +23,7 @@ public class World : MonoBehaviour
     {
         Current = this;    
         _worldGen = new WorldGen();
+        BuildingGenerator = gameObject.GetComponent<BuildingGenerator>();
         _pathingOverlay = transform.Find("_pathingOverlay").gameObject;
         _pathingTexture = new Texture2D(_size, _size);
         _pathingTexture.filterMode = FilterMode.Point;
@@ -36,6 +38,7 @@ public class World : MonoBehaviour
         _roadTiler.Init();
         TileLibrary.GetTile("Road").OverrideTexture(_roadTiler.atlas);
         _worldGen.roadTiler = _roadTiler;
+
     }
 
     void Start()

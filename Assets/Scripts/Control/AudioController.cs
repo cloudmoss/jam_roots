@@ -9,7 +9,7 @@ public static class AudioController
 
     public static void PlaySfxUI(AudioClip clip, float volume = 1f, bool randomize = false, float pitchMultiplier = 1f)
     {
-        volume *= 1f;
+        volume *= Settings.volume;
 
         AudioSource a = GetAudioSource(randomize, pitchMultiplier, volume);
 
@@ -22,7 +22,7 @@ public static class AudioController
 
     public static void PlaySfx(AudioClip clip, Vector2 position, float volume = 1f, bool randomize = true, float pitchMultiplier = 1f, bool spatialize = true, bool doppler = true)
     {
-        volume *= 1f;
+        volume *= Settings.volume;
 
         AudioSource a = GetAudioSource(randomize, pitchMultiplier, volume);
 

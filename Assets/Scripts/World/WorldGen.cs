@@ -33,6 +33,7 @@ public class WorldGen
 
         GenerateStreets();
         GeneratePlaza();
+        GenerateBuildings();
 
         foreach(var def in TileLibrary.Tiles)
         {
@@ -176,6 +177,22 @@ public class WorldGen
         mesh.RecalculateBounds();
 
         return mesh;
+    }
+
+    void GenerateBuildings()
+    {
+        var roadWidth = 2;
+        var middle = (size / (cityBlockSize + roadWidth)) / 2 * (cityBlockSize + roadWidth);
+        for (int x = 0; x < size - cityBlockSize; x += cityBlockSize + roadWidth)
+        {
+            for (int y = 0; y < size - cityBlockSize; y += cityBlockSize + roadWidth)
+            {
+                if (x == middle && y == middle)
+                    continue;
+                    
+                World.Current.BuildingGenerator.Build(cityBlockSize, cityBlockSize, new Vector3(x, y, 0));
+            }
+        }
     }
 
 

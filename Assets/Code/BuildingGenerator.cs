@@ -14,7 +14,7 @@ public class BuildingGenerator : MonoBehaviour
     private List<Sprite> roofTopTiles;
     private List<Sprite> roofMiddleTiles;
 
-    private void Start()
+    private void Awake()
     {
         groundTiles = FindAllTiles("ground");
         wallTiles = FindAllTiles("wall");
@@ -31,7 +31,7 @@ public class BuildingGenerator : MonoBehaviour
             wallHeight = Random.Range(1, height - 2);
         }
         int roofHeight = height - wallHeight;
-        Vector3 tilePos = Vector3.zero;
+        Vector3 tilePos = startPos;
         int doorCount = 0;
         bool doorExits = false;
 
@@ -39,9 +39,9 @@ public class BuildingGenerator : MonoBehaviour
         container.transform.position = startPos;
         container.name = "container";
 
-        for (int i = 0; i <= height; i++)
+        for (int i = 0; i < height; i++)
         {
-            for (int j = 0; j <= width; j++)
+            for (int j = 0; j < width; j++)
             {
                 GameObject tile = new GameObject();
                 tile.transform.parent = container.transform;
@@ -85,7 +85,7 @@ public class BuildingGenerator : MonoBehaviour
 
                 tilePos.x += 1;
             }
-            tilePos.x = 0;
+            tilePos.x = startPos.x;
             tilePos.y += 1;
         }
 

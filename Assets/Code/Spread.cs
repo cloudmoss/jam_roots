@@ -14,6 +14,7 @@ public class Spread : MonoBehaviour
 
     private void Start()
     {
+        gameObject.name = "_BLOODSPAL";
         startScale = transform.localScale;
         bloodTextures = System.Array.ConvertAll(Resources.LoadAll("Blood Textures", typeof(Texture2D)), o => (Texture2D)o);
         int randomTexture = Random.Range(0, bloodTextures.Length);

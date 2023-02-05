@@ -39,6 +39,20 @@ public class Player : Entity
         OnDamageTaken += OnDamageEffects;
     }
 
+    public Vector2Int GetRandomPlayerPos()
+    {
+        var bulbChance = 1f / tentacles.Count;
+
+        if (Random.value > bulbChance && tentacles.Count > 0)
+        {
+            return tentacles[Random.Range(0, tentacles.Count)].EndPosition.ToVector2Int();
+        }
+        else
+        {
+            return _position.ToVector2Int();
+        }
+    }
+
     void OnDamageEffects(float damage)
     {
         CameraController.Current.ScreenShake.Shake(Mathf.Min(damage / 20f, 1f), Mathf.Min(damage / 20f, 1f) * 0.15f, 3f);

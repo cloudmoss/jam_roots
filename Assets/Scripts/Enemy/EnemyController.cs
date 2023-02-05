@@ -64,13 +64,12 @@ public class EnemyController : MonoBehaviour
     }
 
     private void Start() {
-        SpawnWave();
         StartCoroutine(WaveCountdown());
     }
 
     IEnumerator WaveCountdown()
     {
-        WaveTimer = 30f + Mathf.Min(110, Wave * 3f);
+        WaveTimer = 60f + Mathf.Min(110, Wave * 3f);
 
         while(WaveTimer > 0)
         {

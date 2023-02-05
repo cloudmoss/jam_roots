@@ -6,6 +6,7 @@ public class SuckExtension : TentacleExtension
 {
     [SerializeField] private float _suckInterval = 1f;
     [SerializeField] private float _range = 2f;
+    [SerializeField] private AudioClip _sfx;
 
     private float _suckTimer;
 
@@ -27,6 +28,7 @@ public class SuckExtension : TentacleExtension
 
                 _suckTimer = _suckInterval;
                 StartCoroutine(Animate(pile.transform.position));
+                AudioController.PlaySfx(_sfx, transform.position, 0.2f);
             }
         }
     }

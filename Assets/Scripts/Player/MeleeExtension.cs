@@ -7,6 +7,7 @@ public class MeleeExtension : TentacleExtension
     [SerializeField] private float _damage = 10f;
     [SerializeField] private float _range = 1f;
     [SerializeField] private float _cooldown = 1f;
+    [SerializeField] private AudioClip[] _hitSounds;
 
 
     private float _timer = 0f;
@@ -21,6 +22,7 @@ public class MeleeExtension : TentacleExtension
             if (enemiesInRange.Length > 0)
             {
                 enemiesInRange[0].DealDamage(_damage);
+                AudioController.PlaySfx(_hitSounds[Random.Range(0, _hitSounds.Length)], transform.position, 1f);
                 StartCoroutine(Animate(enemiesInRange[0].transform.position));
                 _timer = 0f;
             }

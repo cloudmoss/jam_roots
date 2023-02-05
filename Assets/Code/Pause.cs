@@ -16,6 +16,9 @@ public class Pause : MonoBehaviour
         pausePanel.SetActive(false);
         Slider volumeControl = pausePanel.GetComponentInChildren<Slider>();
         volumeControl.value = PlayerPrefs.GetFloat("volume");
+
+        volumeControl.onValueChanged.AddListener(delegate { PlayerPrefs.SetFloat("volume", volumeControl.value); Settings.LoadSettings(); });
+
         Toggle goreControl = pausePanel.GetComponentInChildren<Toggle>();
         if (PlayerPrefs.GetInt("gore") == 0)
         {
@@ -24,6 +27,18 @@ public class Pause : MonoBehaviour
         else
         {
             goreControl.isOn = true;
+        }
+
+        goreControl.onValueChanged.AddListener(delegate { PlayerPrefs.SetInt("gore", goreControl.isOn ? 1 : 0); Settings.LoadSettings(); });
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape) && !paused)
+        {
+            PauseGame();
+        } else if (Input.GetKeyDown(KeyCode.Escape) && paused)
+        {
+            ContinueGame();
         }
     }
 
