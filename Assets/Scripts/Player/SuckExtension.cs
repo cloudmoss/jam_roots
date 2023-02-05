@@ -23,7 +23,7 @@ public class SuckExtension : TentacleExtension
                 var pile = piles[0];
                 pile.Consume();
                 
-                Player.Current.Heal(1f);
+                Player.Current.Heal(0.33f);
 
                 _suckTimer = _suckInterval;
                 StartCoroutine(Animate(pile.transform.position));
@@ -44,7 +44,7 @@ public class SuckExtension : TentacleExtension
 
         while (t < 1f)
         {
-            t += Time.deltaTime * 2f;
+            t += Time.deltaTime * (1f / _suckInterval);
             var e = t < 0.5f ? EaseOutElastic(t * 2f, 0, 1, 1) : EaseOutElastic(1 - ((t - 0.5f) * 2f), 0, 1, 1);
             transform.localScale = Vector3.one + (Vector3.one * e * 0.5f);
 

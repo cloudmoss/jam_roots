@@ -46,10 +46,10 @@ public class ResourceControl : MonoBehaviour
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            AddResources("Biomass", 25);
-        }
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     AddResources("Biomass", 25);
+        // }
     }
 
     void Populate()

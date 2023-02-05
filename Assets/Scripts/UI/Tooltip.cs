@@ -37,7 +37,6 @@ public class Tooltip : MonoBehaviour
                 _body.text += resourceText;
             }
             _body.text += "\n";
-            _body.text += "\n";
         }
 
         if (_body.text != tooltipDef.body)
@@ -59,8 +58,8 @@ public class Tooltip : MonoBehaviour
         var mousePos = Input.mousePosition;
         transform.position = mousePos;
 
-        if (transform.position.y < 160f)
-            transform.position = new Vector3(transform.position.x, 160f, transform.position.z);
+        if (transform.position.y < 170f)
+            transform.position = new Vector3(transform.position.x, 170f, transform.position.z);
     }
 
 }

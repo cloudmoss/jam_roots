@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +22,9 @@ public class Tentacle : Entity
     [SerializeField] private float _attackRange = 0.5f;
     [SerializeField] private float _movementSpeed = 1f;
     [SerializeField] private Sprite _burrowIcon;
+    [SerializeField] private Image _healthBar;
+    [SerializeField] private Canvas _canvas;
+    [SerializeField] private AudioClip _moveSfx;
 
     private bool _isRooted;
     private TentacleExtension _extension;
@@ -34,6 +38,8 @@ public class Tentacle : Entity
     private Coroutine _movementCoroutine;
     private Vector2Int _currentlyMovingTo;
     private MeshCollider _collider;
+    private Material _materialInst;
+    private float _sfxCooldown = 0.33f;
 
     public void Init() 
     {
@@ -42,7 +48,8 @@ public class Tentacle : Entity
         _targetPos = _endPosition;
         _filter = gameObject.AddComponent<MeshFilter>();
         _renderer = gameObject.AddComponent<MeshRenderer>();
-        _renderer.material = _material;
+        _materialInst = new Material(_material);
+        _renderer.material = _materialInst;
         _collider = gameObject.AddComponent<MeshCollider>();
         _currentlyMovingTo = _startPosition;
         _extension = GetComponentInChildren<TentacleExtension>();
@@ -96,8 +103,14 @@ public class Tentacle : Entity
     public void Burrow()
     {
         _isRooted = true;
-        Player.Current.CreateTentacle(_endPosition, Player.Extensions.FirstOrDefault(e => e.Name == "Club"));
-        Player.Current.CreateTentacle(_endPosition, Player.Extensions.FirstOrDefault(e => e.Name == "Club"));
+        var freeSpots = Pathfinding.GetTilesInRange(_endPosition, 3).Where(p => p.Position != _endPosition).ToArray();
+
+        var tentacle = Player.Current.CreateTentacle(_endPosition, Player.Extensions.FirstOrDefault(e => e.Name == "Club"));
+        tentacle.transform.SetParent(transform, true);
+        tentacle.Move(freeSpots[Random.Range(0, freeSpots.Length)].Position);
+        tentacle = Player.Current.CreateTentacle(_endPosition, Player.Extensions.FirstOrDefault(e => e.Name == "Club"));
+        tentacle.transform.SetParent(transform, true);
+        tentacle.Move(freeSpots[Random.Range(0, freeSpots.Length)].Position);
 
         Destroy(gameObject.GetComponentInChildren<TentacleExtension>().gameObject);
     }
@@ -166,6 +179,12 @@ public class Tentacle : Entity
 
     IEnumerator MovementSequence(Vector2Int fromPosition, Vector2Int toPosition)
     {
+        if (_sfxCooldown <= 0f)
+        {
+            AudioController.PlaySfx(_moveSfx, _endPosition, 1f, true);
+            _sfxCooldown = _moveSfx.length * 0.9f;
+        }
+
         _currentlyMovingTo = toPosition;
         var curPos = fromPosition;
 
@@ -288,6 +307,14 @@ public class Tentacle : Entity
     {
         var mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = 0;
+
+        if (_sfxCooldown > 0f)
+        {
+            _sfxCooldown -= Time.deltaTime;
+        }
+
+        _healthBar.fillAmount = Health / MaxHealth;
+        _canvas.transform.position = _endPosition.ToVector2();
 
         var dist = Vector3.Distance(mouseWorldPos, _handle.transform.position);
 

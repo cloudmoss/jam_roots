@@ -20,6 +20,7 @@ public class BloodSplatter : MonoBehaviour
             float y = Random.Range(-spreadDistance, spreadDistance);
             GameObject blood = Instantiate(bloodPrefab, bloodPos + new Vector3(x, y, -1), Quaternion.identity);
             float scale = Random.Range(minScale, maxScale);
+            blood.transform.SetParent(transform, true);
             blood.transform.localScale = new Vector3(scale, scale, 1);
             blood.AddComponent<Spread>();
 
@@ -27,7 +28,12 @@ public class BloodSplatter : MonoBehaviour
             float rotation = Random.Range(0, 360);
             blood.transform.Rotate(0, 0, rotation);
         }
+    }
 
-        Destroy(this);
+    IEnumerator Start()
+    {
+        yield return new WaitForSeconds(60f);
+
+        Destroy(gameObject);
     }
 }

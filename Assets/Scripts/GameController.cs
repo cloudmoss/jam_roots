@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour
     private void Awake() 
     {
         TileLibrary.Init();
+        Time.timeScale = 1f;
     }
 
     void Start()

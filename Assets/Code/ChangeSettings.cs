@@ -6,16 +6,6 @@ public class ChangeSettings : MonoBehaviour
 {
     GameObject musicControl;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        musicControl = GameObject.Find("Music");
-        float volume = PlayerPrefs.GetFloat("volume");
-        musicControl.GetComponent<AudioSource>().volume = volume;
-        int gore = PlayerPrefs.GetInt("gore");
-        // however the gore is turned off
-    }
-
     public void SaveSettings()
     {
         PlayerPrefs.Save();

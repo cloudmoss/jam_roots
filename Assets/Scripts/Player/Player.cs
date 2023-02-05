@@ -22,12 +22,12 @@ public class Player : Entity
 
 
     private void Awake() {
+        Current = this;
         _collider = gameObject.AddComponent<SphereCollider>();
         _collider.radius = 1.5f;
 
         _position = transform.position;
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        Current = this;
 
         _tentacleTemplate = GetComponentInChildren<Tentacle>();
         _tentacleTemplate.gameObject.SetActive(false);
@@ -63,7 +63,7 @@ public class Player : Entity
         if (level >= _stages.Length) return null;
 
         var buttons = new List<ActionButton.Definition>();
-        var cost = new ResourceClass[] { new ResourceClass("Biomass", level * 250) };
+        var cost = new ResourceClass[] { new ResourceClass("Biomass", level * 125) };
 
         buttons.Add(new ActionButton.Definition()
         {
@@ -85,7 +85,6 @@ public class Player : Entity
                 UnitInspectorUI.Current.Open(this);
             }
         });
-
 
         return buttons.ToArray();
     }

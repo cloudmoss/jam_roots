@@ -101,7 +101,7 @@ MonoBehaviour:
   _description: Cover your enemies in thick goo.
   _cost:
   - _name: Biomass
-    _amount: 150
+    _amount: 35
     _sprite: {fileID: 21300000, guid: 01e26cd8e244dae40b3cd104592e0dda, type: 3}
   _cooldown: 2
   _range: 10

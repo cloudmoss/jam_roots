@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,6 +11,7 @@ public class MainMenu : MonoBehaviour
 
     private void Awake() {
         Settings.LoadSettings();
+        Time.timeScale = 1f;
     }
 
     void Start()
@@ -19,15 +19,9 @@ public class MainMenu : MonoBehaviour
         creditsPanel.SetActive(false);
         settingsPanel.SetActive(false);
         Slider volumeControl = settingsPanel.GetComponentInChildren<Slider>();
-        volumeControl.value = PlayerPrefs.GetFloat("volume");
+        volumeControl.value = Settings.volume;
         Toggle goreControl = settingsPanel.GetComponentInChildren<Toggle>();
-        if (PlayerPrefs.GetInt("gore") == 0)
-        {
-            goreControl.isOn = false;
-        } else
-        {
-            goreControl.isOn = true;
-        }
+        goreControl.isOn = Settings.gore;
     }
 
     // start game

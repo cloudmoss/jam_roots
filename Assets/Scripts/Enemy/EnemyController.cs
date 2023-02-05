@@ -58,13 +58,14 @@ public class EnemyController : MonoBehaviour
         gore.OnConsumed += () => GoreInstances.Remove(gore);
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.P))
-            WaveTimer = 0;
-    }
-
     private void Start() {
         StartCoroutine(WaveCountdown());
+    }
+
+    public void SummonWave()
+    {
+        if (WaveTimer > 2f)
+            WaveTimer = 0;
     }
 
     IEnumerator WaveCountdown()

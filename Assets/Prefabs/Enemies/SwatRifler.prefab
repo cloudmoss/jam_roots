@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -2
+  m_SortingOrder: 15
   m_Sprite: {fileID: -655810601, guid: 33987a7127e41e547a977548bd98f701, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -115,7 +115,7 @@ MonoBehaviour:
   - {fileID: 8370500904534100424, guid: 30d2616ef6768524c8e4884e6798f782, type: 3}
   _gorePilePrefab: {fileID: 9038665397869483593, guid: 911e7bd411aaf3d41a6e27337abd038a, type: 3}
   _attackDist: 3
-  _speed: 1.75
+  _speed: 2
   _damage: 0
   _meleeAttackRate: 0
   _difficultyRating: 5
@@ -137,7 +137,7 @@ MonoBehaviour:
   _damage: 0.2
   _velocity: 25
   _inaccuracy: 8
-  _bulletFX: {fileID: 2976472485242474481, guid: 071b290924d4d424490828e0afe062ce, type: 3}
+  _bulletFX: {fileID: 619898716843765275, guid: 211997c225e09354786a082b1fdd33f5, type: 3}
   _sfxVolume: 0.3
   _sfx:
   - {fileID: 8300000, guid: 125cca7271136874bb9c0ac4142144ef, type: 3}
