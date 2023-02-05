@@ -14,7 +14,7 @@ public static class Settings
     public static void LoadSettings()
     {
         if (PlayerPrefs.HasKey("volume"))
-            _volume = PlayerPrefs.GetFloat("volume");
+            _volume = PlayerPrefs.GetFloat("volume", 1f);
         if (PlayerPrefs.HasKey("gore"))
             _gore = PlayerPrefs.GetInt("gore", 1) == 1;
     }

@@ -6,10 +6,25 @@ public class GorePile : MonoBehaviour
 {
     public event System.Action OnConsumed;
 
+    [SerializeField] private AnimationCurve _popInAnim;
+
     public int resourceCount = 10;
     
     private void Awake() {
         EnemyController.Current.RegisterGore(this);
+    }
+
+    IEnumerator Start() {
+        var t = 0f;
+        var startScale = Vector3.one * 0.25f;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime * 2f;
+            var e = _popInAnim.Evaluate(t);
+            transform.localScale = Vector3.Lerp(startScale, Vector3.one, e);
+            yield return null;
+        }
     }
 
     public void Consume()
@@ -25,4 +40,5 @@ public class GorePile : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 }

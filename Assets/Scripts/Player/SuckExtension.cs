@@ -17,7 +17,6 @@ public class SuckExtension : TentacleExtension
         }
         else
         {
-            transform.up = _tentacle.TipFacingDirection;
             var piles = EnemyController.GetGoreInRange(transform.position, _range);
             if (piles.Length > 0)
             {
@@ -29,6 +28,10 @@ public class SuckExtension : TentacleExtension
                 _suckTimer = _suckInterval;
                 StartCoroutine(Animate(pile.transform.position));
                 AudioController.PlaySfx(_sfx, transform.position, 0.2f);
+            }
+            else
+            {
+                transform.up = _tentacle.TipFacingDirection;
             }
         }
     }

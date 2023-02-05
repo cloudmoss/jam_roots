@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MusicChanger : MonoBehaviour
 {
-    private float _volume = 0.35f;
+    private float _volume = 0.4f;
 
     [SerializeField] private string _waveMusic;
     [SerializeField] private string _peaceMusic;
@@ -21,19 +21,20 @@ public class MusicChanger : MonoBehaviour
 
     private void Start()
     {
+        _volume = Settings.volume * 0.4f;
         ChangeSong(_peaceMusic);
-        _volume *= Settings.volume;
 
         EnemyController.Current.OnWaveStart += () => ChangeSong(_waveMusic);
         EnemyController.Current.OnWaveCleared += () => ChangeSong(_peaceMusic);
     }
 
     private void Update() {
-        if (Settings.volume != audioSource.volume * 0.4f)
+
+        if (Settings.volume * 0.4f != _volume)
         {
-            audioSource.volume = Settings.volume * _volume;
+            _volume = Settings.volume * 0.4f;
+            audioSource.volume = _volume;
         }
-        audioSource.volume = Settings.volume * _volume;
     }
 
     public void ChangeSong(string state)

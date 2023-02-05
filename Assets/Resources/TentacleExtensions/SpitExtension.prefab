@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7622628232572459572
+--- !u!1 &330811737054320704
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,65 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7622628232572459573}
-  - component: {fileID: 7622628232572459562}
-  - component: {fileID: 7622628232572459563}
+  - component: {fileID: 330811737054320719}
+  - component: {fileID: 330811737054320718}
+  - component: {fileID: 330811737054320712}
   m_Layer: 3
-  m_Name: ClubExtension
+  m_Name: SpitExtension
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7622628232572459573
+--- !u!4 &330811737054320719
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7622628232572459572}
+  m_GameObject: {fileID: 330811737054320704}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7622628232572459562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7622628232572459572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aef7678992765c840abe6fdf6942643a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _name: Club
-  _description: Smash you enemies to bits!
-  _cost:
-  - _name: Biomass
-    _amount: 100
-    _sprite: {fileID: 21300000, guid: 01e26cd8e244dae40b3cd104592e0dda, type: 3}
-  _damage: 10
-  _range: 1.5
-  _cooldown: 1
-  _hitSounds:
-  - {fileID: 8300000, guid: e31171dbbe8af994bb4e8415afa71b4e, type: 3}
-  - {fileID: 8300000, guid: a167cc8e52341444ba37715f21401a7d, type: 3}
-  - {fileID: 8300000, guid: d3febf610252e994eacdd609f4aa39b5, type: 3}
-  - {fileID: 8300000, guid: b69fc3d0fa174474bb0415fe8deaa4f7, type: 3}
-  - {fileID: 8300000, guid: ba6c5966af910344183703f2ab04be19, type: 3}
---- !u!212 &7622628232572459563
+--- !u!212 &330811737054320718
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7622628232572459572}
+  m_GameObject: {fileID: 330811737054320704}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -101,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: 4a55ac941c50a3049b9a6963910d2f55, type: 3}
+  m_Sprite: {fileID: 675789578, guid: 681882ad0f24cb34a84f6dc60eaeabf1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -112,3 +85,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &330811737054320712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330811737054320704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3a7ad5b4fc86c64f8495129a835e32f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _name: Spitter
+  _description: Cover your enemies in thick goo.
+  _cost:
+  - _name: Biomass
+    _amount: 150
+    _sprite: {fileID: 21300000, guid: 01e26cd8e244dae40b3cd104592e0dda, type: 3}
+  _cooldown: 2
+  _range: 10
+  _damage: 10
+  _projectileSpeed: 4
+  _sfx: {fileID: 8300000, guid: 4298ceabe0ee6504ca55b7c68055196e, type: 3}
+  _animation:
+  - {fileID: 675789578, guid: 681882ad0f24cb34a84f6dc60eaeabf1, type: 3}
+  - {fileID: 1075507314, guid: 681882ad0f24cb34a84f6dc60eaeabf1, type: 3}
+  - {fileID: -1108445145, guid: 681882ad0f24cb34a84f6dc60eaeabf1, type: 3}
+  - {fileID: 2082561999, guid: 681882ad0f24cb34a84f6dc60eaeabf1, type: 3}
+  _projectilePrefab: {fileID: 6394511699867395399, guid: 6675f4cef0aee1049affe9db21daa5bb, type: 3}

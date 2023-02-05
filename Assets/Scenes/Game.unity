@@ -4010,7 +4010,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -11
+  m_SortingOrder: 11
   m_Sprite: {fileID: -604762904, guid: 5be33d985a5de38449d53f6ad7ca9c59, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4182,7 +4182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00effe54b24b30b4fb771e884bc75fe4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volume: 0.35
   _waveMusic: Lightless Dawn
   _peaceMusic: King Of The Grove
 --- !u!114 &2106596182
