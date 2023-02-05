@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController Current { get; private set; }
+    public ScreenShake ScreenShake { get; private set;}
+    public Vector2 targetPosition { get { return _targetPos; } }
+
     public float speed = 20;
     public Vector2 zoomBounds = new Vector2(5, 25);
     public float zoomSpeed = 5f;
@@ -14,11 +18,14 @@ public class CameraController : MonoBehaviour
     private Vector2 _velocity = Vector2.zero;
     private Vector2 _targetPos;
     private float _zoom;
+    
 
     private void Awake()
     {
+        Current = this;
+        ScreenShake = GetComponentInChildren<ScreenShake>();
         _targetPos = transform.position;
-        _camera = GetComponent<Camera>();
+        _camera = GetComponentInChildren<Camera>();
         _zoom = _camera.orthographicSize;
     }
 

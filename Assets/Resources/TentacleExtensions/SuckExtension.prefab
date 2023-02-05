@@ -73,8 +73,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9651395878b95e94f821546a6ce4cbef, type: 3}
+  m_SortingOrder: -10
+  m_Sprite: {fileID: -1536689024, guid: fc9d80908b4cfbe4e9e44acfbc22c27a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -101,7 +101,7 @@ MonoBehaviour:
   _description: Suck your enemies dry!
   _cost:
   - _name: Biomass
-    _sprite: {fileID: 21300000, guid: 01e26cd8e244dae40b3cd104592e0dda, type: 3}
     _amount: 100
+    _sprite: {fileID: 21300000, guid: 01e26cd8e244dae40b3cd104592e0dda, type: 3}
   _suckInterval: 1
   _range: 2

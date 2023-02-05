@@ -8,6 +8,8 @@ public class EnemyController : MonoBehaviour
     public static EnemyController Current { get; private set; }
     public static List<EnemyBase> EnemyInstances { get; private set; } = new List<EnemyBase>();
     public static List<GorePile> GoreInstances { get; private set; } = new List<GorePile>();
+    public static bool GoreEnabled { get; private set; } = true;
+    public int score { get; private set; } = 0;
 
     public int Wave { get; private set; } = 1;
     public float WaveTimer { get; private set; }
@@ -17,17 +19,19 @@ public class EnemyController : MonoBehaviour
     void Awake()
     {
         Current = this;
+        if (PlayerPrefs.HasKey("gore"))
+            GoreEnabled = PlayerPrefs.GetInt("gore", 1) == 1;
     }
 
     IEnumerator SpawnWave()
     {
         float currency = Wave * 10;
-        var possibleEnemies = Enemies.Where(e => e.DifficultyRating <= currency / 5f).ToList();
+        var possibleEnemies = Enemies.Where(e => e.MinWave <= Wave && e.DifficultyRating <= currency / 5f).ToList();
         var spawns = World.Current.Generator.SpawnPoints;
 
         while(currency > 0)
         {
-            var enemy = possibleEnemies[Random.Range(0, Enemies.Count)];
+            var enemy = possibleEnemies[Random.Range(0, possibleEnemies.Count)];
             var spawnPoint = spawns[Random.Range(0, spawns.Length)];
 
             currency -= enemy.DifficultyRating;
@@ -35,6 +39,7 @@ public class EnemyController : MonoBehaviour
             EnemyInstances.Add(inst);
             inst.OnDeath += () => {
                 EnemyInstances.Remove(inst);
+                score += inst.DifficultyRating;
             };
 
             yield return new WaitForSeconds(0.5f);

@@ -27,7 +27,7 @@ public class World : MonoBehaviour
         _pathingTexture.filterMode = FilterMode.Point;
         _pathingOverlay.GetComponent<MeshRenderer>().material.mainTexture = _pathingTexture;
         _pathingOverlay.transform.localScale = new Vector3(_size, _size, 1);
-        _pathingOverlay.transform.position = new Vector3(_size / 2f - 0.5f, _size / 2f - 0.5f, -100);
+        _pathingOverlay.transform.position = new Vector3(_size / 2f - 0.5f, _size / 2f - 0.5f, -9);
 
         _pathingClearColors = new Color[_size * _size];
         _pathingTexture.SetPixels(_pathingClearColors);

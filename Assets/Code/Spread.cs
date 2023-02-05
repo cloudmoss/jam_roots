@@ -32,7 +32,7 @@ public class Spread : MonoBehaviour
 
         if (transform.localScale == targetScale)
         {
-            enabled = false;
+            Destroy(this);
         }
     }
 }

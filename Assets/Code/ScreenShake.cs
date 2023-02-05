@@ -28,7 +28,7 @@ public class ScreenShake : MonoBehaviour
     {
         if (duration > 0)
         {
-            mainCamera.transform.localPosition = startPos + Random.insideUnitSphere * intensity;
+            mainCamera.transform.localPosition = startPos + ((Random.insideUnitSphere.normalized) * Random.Range(0.5f, 1f)) * intensity;
             duration -= Time.deltaTime * damp;
         } else if (mainCamera.transform.localPosition != startPos)
         {

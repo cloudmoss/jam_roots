@@ -257,10 +257,10 @@ public class Tentacle : Entity
             connectingVert1 = vert3;
             connectingVert2 = vert4;
 
-            vertices.Add(vert1 - tpos);
-            vertices.Add(vert2 - tpos);
-            vertices.Add(vert3 - tpos);
-            vertices.Add(vert4 - tpos);
+            vertices.Add(vert1 - tpos - (Vector3.forward * 10));
+            vertices.Add(vert2 - tpos - (Vector3.forward * 10));
+            vertices.Add(vert3 - tpos - (Vector3.forward * 10));
+            vertices.Add(vert4 - tpos - (Vector3.forward * 10));
 
             lastVert = curVert;
         }
@@ -302,6 +302,8 @@ public class Tentacle : Entity
                 _grabbed = true;
                 _currentlySelected = this;
                 World.Current.ShowPathingTiles(Pathfinding.GetTilesInRange(_startPosition, length));
+                UnitInspectorUI.Current.Open(this);
+                _handle.GetComponent<SpriteRenderer>().color = Color.green;
             }
         }
         else
@@ -317,6 +319,7 @@ public class Tentacle : Entity
 
             if (!Input.GetMouseButton(0))
             {
+                _handle.GetComponent<SpriteRenderer>().color = Color.white;
                 _grabbed = false;
                 _handle.transform.position = new Vector3(_targetPos.x, _targetPos.y, 0);
                 _currentlySelected = null;
