@@ -7,7 +7,7 @@ public class BloodSplatter : MonoBehaviour
 {
     [SerializeField] private GameObject bloodPrefab;
     [SerializeField] private int maxBloodSplatters = 10;
-    private float spreadDistance = 0.1f;
+    private float spreadDistance = 0.2f;
     private float minScale = 0.01f;
     private float maxScale = 0.1f;
 

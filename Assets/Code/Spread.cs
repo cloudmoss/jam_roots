@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Spread : MonoBehaviour
 {
-    private float growthSpeed = 6f;
-    private float maxSize = 1.4f;
+    private float growthSpeed = 10f;
+    private float maxSize = 1.6f;
 
     private Vector3 targetScale;
     private Vector3 startScale;

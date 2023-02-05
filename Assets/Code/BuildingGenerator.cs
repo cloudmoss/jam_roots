@@ -32,6 +32,7 @@ public class BuildingGenerator : MonoBehaviour
         }
         int roofHeight = height - wallHeight;
         Vector3 tilePos = Vector3.zero;
+        int doorCount = 0;
         bool doorExits = false;
 
         GameObject container = new GameObject();
@@ -53,6 +54,14 @@ public class BuildingGenerator : MonoBehaviour
                     tileSprite.sprite = GetCorrectTile(groundTiles, j);
                     if (IsDoor(tileSprite.sprite))
                     {
+                        if (doorCount >= 2)
+                        {
+                            while(IsDoor(tileSprite.sprite))
+                            {
+                                tileSprite.sprite = GetCorrectTile(groundTiles, j);
+                            }
+                        }
+                        doorCount++;
                         doorExits = true;
                     }
 
