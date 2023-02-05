@@ -138,3 +138,16 @@ MonoBehaviour:
   _velocity: 25
   _inaccuracy: 8
   _bulletFX: {fileID: 2976472485242474481, guid: 071b290924d4d424490828e0afe062ce, type: 3}
+  _sfxVolume: 0.3
+  _sfx:
+  - {fileID: 8300000, guid: 125cca7271136874bb9c0ac4142144ef, type: 3}
+  - {fileID: 8300000, guid: 72258577292c6e542b84aede91b6ec99, type: 3}
+  - {fileID: 8300000, guid: 97c173c75d24c694db1999731237291b, type: 3}
+  - {fileID: 8300000, guid: 0a16db86bc021cf469745210281a67bb, type: 3}
+  - {fileID: 8300000, guid: 0f513c1bf9ab0ad4eaa03d1b1cd08c2e, type: 3}
+  - {fileID: 8300000, guid: 1938fa1d368c156468fff2b5d8894acf, type: 3}
+  - {fileID: 8300000, guid: 131a086970ca20a4594e9cbe30e32092, type: 3}
+  - {fileID: 8300000, guid: 5216a3cffb90abf4ba778970724c27ba, type: 3}
+  - {fileID: 8300000, guid: c5afb72a18fdfc74b9c6b15ce9197974, type: 3}
+  - {fileID: 8300000, guid: ba8b7eac0f2a6714c88877a4dee2d0b3, type: 3}
+  - {fileID: 8300000, guid: 16d39bfe15bb2f344a00f9496757d923, type: 3}

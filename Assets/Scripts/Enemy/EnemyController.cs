@@ -5,6 +5,9 @@ using System.Linq;
 
 public class EnemyController : MonoBehaviour
 {
+    public event System.Action OnWaveStart;
+    public event System.Action OnWaveCleared;
+
     public static EnemyController Current { get; private set; }
     public static List<EnemyBase> EnemyInstances { get; private set; } = new List<EnemyBase>();
     public static List<GorePile> GoreInstances { get; private set; } = new List<GorePile>();
@@ -40,6 +43,9 @@ public class EnemyController : MonoBehaviour
             inst.OnDeath += () => {
                 EnemyInstances.Remove(inst);
                 score += inst.DifficultyRating;
+
+                if (EnemyInstances.Count == 0)
+                    OnWaveCleared?.Invoke();
             };
 
             yield return new WaitForSeconds(0.5f);
@@ -73,6 +79,8 @@ public class EnemyController : MonoBehaviour
         }
 
         Wave++;
+
+        OnWaveStart?.Invoke();
         yield return StartCoroutine(SpawnWave());
 
         StartCoroutine(WaveCountdown());
