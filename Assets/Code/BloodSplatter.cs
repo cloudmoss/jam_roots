@@ -27,5 +27,7 @@ public class BloodSplatter : MonoBehaviour
             float rotation = Random.Range(0, 360);
             blood.transform.Rotate(0, 0, rotation);
         }
+
+        Destroy(this);
     }
 }

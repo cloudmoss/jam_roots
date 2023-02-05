@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour
     public static List<EnemyBase> EnemyInstances { get; private set; } = new List<EnemyBase>();
     public static List<GorePile> GoreInstances { get; private set; } = new List<GorePile>();
     public static bool GoreEnabled { get; private set; } = true;
+    public int score { get; private set; } = 0;
 
     public int Wave { get; private set; } = 1;
     public float WaveTimer { get; private set; }
@@ -38,6 +39,7 @@ public class EnemyController : MonoBehaviour
             EnemyInstances.Add(inst);
             inst.OnDeath += () => {
                 EnemyInstances.Remove(inst);
+                score += inst.DifficultyRating;
             };
 
             yield return new WaitForSeconds(0.5f);

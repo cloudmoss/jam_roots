@@ -17,8 +17,10 @@ public class UIController : MonoBehaviour
 
     void Start()
     {
-        Player.Current.OnDamageTaken += UpdateHealthText;
+        Player.Current.OnDamageTaken += (float f) => UpdateHealthText();
+        Player.Current.OnHeal += UpdateHealthText;
         StartCoroutine(UpdateWaveText());
+        UpdateHealthText();
     }
 
     public void UpdateHealthText()

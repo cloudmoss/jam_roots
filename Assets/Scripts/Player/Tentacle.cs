@@ -257,10 +257,10 @@ public class Tentacle : Entity
             connectingVert1 = vert3;
             connectingVert2 = vert4;
 
-            vertices.Add(vert1 - tpos);
-            vertices.Add(vert2 - tpos);
-            vertices.Add(vert3 - tpos);
-            vertices.Add(vert4 - tpos);
+            vertices.Add(vert1 - tpos - (Vector3.forward * 10));
+            vertices.Add(vert2 - tpos - (Vector3.forward * 10));
+            vertices.Add(vert3 - tpos - (Vector3.forward * 10));
+            vertices.Add(vert4 - tpos - (Vector3.forward * 10));
 
             lastVert = curVert;
         }

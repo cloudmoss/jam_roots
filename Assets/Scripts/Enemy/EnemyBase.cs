@@ -35,6 +35,8 @@ public class EnemyBase : Entity
 
     void Update()
     {
+        if (Player.Current == null) return;
+        
         var playerPos = Player.Current.transform.position;
 
         if (_meleeAttackRate > 0f)

@@ -35,6 +35,13 @@ public class Player : Entity
         Extensions = Resources.LoadAll<TentacleExtension>("TentacleExtensions");
 
         Debug.Log("Tentacle extensions: " + Extensions.Length.ToString());
+
+        OnDamageTaken += OnDamageEffects;
+    }
+
+    void OnDamageEffects(float damage)
+    {
+        CameraController.Current.ScreenShake.Shake(Mathf.Min(damage / 20f, 1f), Mathf.Min(damage / 20f, 1f) * 0.15f, 3f);
     }
 
     public override ActionButton.Definition[] GetActionButtons()
@@ -69,12 +76,25 @@ public class Player : Entity
         return buttons.ToArray();
     }
 
+    public void Heal(float amount)
+    {
+        var tentaclePortion = amount / tentacles.Count;
+
+        SetHealth(Health + amount);
+
+        foreach (var tentacle in tentacles)
+        {
+            tentacle.SetHealth(tentacle.Health + tentaclePortion);
+        }
+    }
+
     public Tentacle CreateTentacle(Vector2 position, TentacleExtension extension = null)
     {
         var tentacle = Instantiate(_tentacleTemplate, transform);
         tentacle.transform.parent = transform;
         tentacle.transform.position = position;
         tentacle.gameObject.SetActive(true);
+        tentacle.OnDamageTaken += (float dmg) => { OnDamageEffects(dmg / 1.5f); };
 
         tentacle.Init();
         tentacles.Add(tentacle);
@@ -126,6 +146,11 @@ public class Player : Entity
                 if (!EventSystem.current.IsPointerOverGameObject())
                     UnitInspectorUI.Current.Close();
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            DealDamage(10000);
         }
     }
 

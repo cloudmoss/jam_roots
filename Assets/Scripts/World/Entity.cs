@@ -5,7 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class Entity : MonoBehaviour
 {
-    public event System.Action OnDamageTaken;
+    public event System.Action<float> OnDamageTaken;
+    public event System.Action OnHeal;
     public event System.Action OnDeath;
     public event System.Action OnMove;
 
@@ -32,6 +33,9 @@ public class Entity : MonoBehaviour
     public void SetHealth(float health)
     {
         _health = health;
+        _health = Mathf.Clamp(_health, 0, _maxHealth);
+
+        OnHeal?.Invoke();
     }
 
     public void SetHealth(float health, float maxHealth)
@@ -66,7 +70,7 @@ public class Entity : MonoBehaviour
     {
         _health -= damage;
 
-        OnDamageTaken?.Invoke();
+        OnDamageTaken?.Invoke(damage);
 
         if (_health <= 0)
         {

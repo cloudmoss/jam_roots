@@ -15,6 +15,8 @@ public class ShootingBehavior : EnemyBaseBehavior
 
     void Update()
     {
+        if (Player.Current == null) return;
+
         EnemyBase.canMove = true;
 
         if (_shootingTimer > 0f)

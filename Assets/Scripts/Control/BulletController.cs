@@ -87,6 +87,7 @@ public class BulletController : MonoBehaviour
 
                 foreach (KeyValuePair<Bullet, HitResult> result in results)
                 {
+                    if (result.Value.entity == null) continue;
                     result.Value.entity.DealDamage(result.Value.bullet.damage);
                     Destroy(result.Value.bullet.instance);
                     _bullets.Remove(result.Value.bullet);

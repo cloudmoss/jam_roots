@@ -49,8 +49,8 @@ MonoBehaviour:
   _description: Smash you enemies to bits!
   _cost:
   - _name: Biomass
-    _sprite: {fileID: 21300000, guid: 01e26cd8e244dae40b3cd104592e0dda, type: 3}
     _amount: 100
+    _sprite: {fileID: 21300000, guid: 01e26cd8e244dae40b3cd104592e0dda, type: 3}
   _damage: 10
   _range: 1.5
   _cooldown: 1
@@ -94,8 +94,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: cd37f20cfacff254cbde17ce0da2df9d, type: 3}
+  m_SortingOrder: -10
+  m_Sprite: {fileID: 21300000, guid: 4a55ac941c50a3049b9a6963910d2f55, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

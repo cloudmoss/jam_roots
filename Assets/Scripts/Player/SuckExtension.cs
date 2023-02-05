@@ -22,6 +22,9 @@ public class SuckExtension : TentacleExtension
             {
                 var pile = piles[0];
                 pile.Consume();
+                
+                Player.Current.Heal(1f);
+
                 _suckTimer = _suckInterval;
                 StartCoroutine(Animate(pile.transform.position));
             }
