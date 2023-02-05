@@ -10,6 +10,8 @@ public class ShootingBehavior : EnemyBaseBehavior
     [SerializeField] private float _velocity = 10f;
     [SerializeField] private float _inaccuracy = 4f;
     [SerializeField] private GameObject _bulletFX;
+    [SerializeField] private float _sfxVolume = 0.3f;
+    [SerializeField] private AudioClip[] _sfx;
 
     private float _shootingTimer = 0f;
 
@@ -31,6 +33,8 @@ public class ShootingBehavior : EnemyBaseBehavior
 
                 BulletController.CreateBullet(_bulletFX, transform.position, (Player.Current.transform.position - transform.position).normalized * _velocity, _damage, _inaccuracy);
                 _shootingTimer = _shootingCooldown;
+
+                AudioController.PlaySfx(_sfx[Random.Range(0, _sfx.Length)], transform.position, _sfxVolume);
             }
             else
             {
